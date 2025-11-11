@@ -5,12 +5,12 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Henry's Portfolio Page</title>
+  <title>Henry's Personal Page</title>
 
   <!--
     - favicon
   -->
-  <link rel="shortcut icon" href="./assets/images/logo.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="./assets/images/300_21_黑猫警长.svg" type="image/x-icon">
 
   <!--
     - custom css link
@@ -42,7 +42,7 @@
       <div class="sidebar-info">
 
         <figure class="avatar-box">
-          <img src="./assets/images/memoji.png" alt="Henry" width="80">
+          <img src="./assets/images/The Avator.png" alt="Henry" width="80">
         </figure>
 
         <div class="info-content">
@@ -100,9 +100,9 @@
             </div>
 
             <div class="contact-info">
-              <p class="contact-title">Birthday</p>
+              <p class="contact-title">Birthday of my cat</p>
 
-              <time datetime="2003-11-01">November 1, 2003</time>
+              <time datetime="2003-11-01">Someday, 2024</time>
             </div>
 
           </li>
@@ -1108,6 +1108,288 @@
   -->
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+  <!--
+    - Live2D Widget - hijiki 可爱小角色模型
+  -->
+  <script src="https://fastly.jsdelivr.net/npm/live2d-widget@3.1.4/lib/L2Dwidget.min.js"></script>
+  <script>
+    // 使用hijiki模型 - 一个可爱的小角色，放大到1.3倍
+    L2Dwidget.init({
+      "model": {
+        "jsonPath": "https://fastly.jsdelivr.net/gh/xiazeyu/live2d-widget-models/packages/live2d-widget-model-hijiki/assets/hijiki.model.json",
+        "scale": 1.3
+      },
+      "display": {
+        "position": "right",
+        "width": 208,  // 原来160 * 1.3
+        "height": 364, // 原来280 * 1.3
+        "hOffset": 35,
+        "vOffset": 10,
+        "superSample": 1
+      },
+      "mobile": {
+        "show": false,
+        "scale": 1.2  // 移动端也相应放大
+      },
+      "react": {
+        "opacityDefault": 0.85,
+        "opacityOnHover": 1.0
+      }
+    });
+  </script>
+
+  <!--
+    - Paper Plane Game Button
+  -->
+  <button class="paper-plane-button" id="paperPlaneBtn" title="点击开始纸飞机游戏！">
+    <span class="paper-plane-icon">✈️</span>
+  </button>
+  <div class="game-tooltip" id="gameTooltip">
+    点击开始纸飞机游戏！按Esc退出
+  </div>
+
+  <!--
+    - Paper Plane Game Script
+  -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const paperPlaneBtn = document.getElementById('paperPlaneBtn');
+      const gameTooltip = document.getElementById('gameTooltip');
+      let gameActive = false;
+      
+      // 显示/隐藏提示
+      paperPlaneBtn.addEventListener('mouseenter', function() {
+        if (!gameActive) {
+          gameTooltip.classList.add('show');
+        }
+      });
+      
+      paperPlaneBtn.addEventListener('mouseleave', function() {
+        gameTooltip.classList.remove('show');
+      });
+      
+      // 纸飞机游戏按钮点击事件
+      paperPlaneBtn.addEventListener('click', function() {
+        if (gameActive) {
+          return; // 如果游戏已经在运行，不重复启动
+        }
+        
+        gameActive = true;
+        gameTooltip.classList.remove('show');
+        paperPlaneBtn.style.display = 'none'; // 隐藏按钮
+        
+        // 加载并启动游戏
+        loadAsteroidsGame();
+      });
+      
+      // 加载纸飞机游戏
+      function loadAsteroidsGame() {
+        // 检查是否已经加载过游戏脚本
+        if (document.getElementById('asteroids-script')) {
+          // 如果已经加载，直接启动游戏
+          startGame();
+          return;
+        }
+        
+        // 动态加载游戏脚本
+        const script = document.createElement('script');
+        script.id = 'asteroids-script';
+        script.src = 'https://fastly.jsdelivr.net/gh/stevenjoezhang/asteroids/asteroids.js';
+        
+        script.onload = function() {
+          startGame();
+        };
+        
+        script.onerror = function() {
+          console.error('Failed to load asteroids game');
+          resetGameState();
+        };
+        
+        document.head.appendChild(script);
+      }
+      
+      // 启动游戏
+      function startGame() {
+        try {
+          // 检查游戏是否已经实例化
+          if (typeof Asteroids === 'function') {
+            // 创建新的游戏实例
+            const game = new Asteroids();
+            
+            // 监听Esc键退出游戏
+            const handleEscape = function(e) {
+              if (e.key === 'Escape' || e.keyCode === 27) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // 清理游戏实例
+                if (game && typeof game.destroy === 'function') {
+                  try {
+                    game.destroy();
+                  } catch (err) {
+                    console.warn('Error destroying game:', err);
+                  }
+                }
+                
+                // 重置游戏状态
+                setTimeout(resetGameState, 100);
+                document.removeEventListener('keydown', handleEscape);
+              }
+            };
+            
+            document.addEventListener('keydown', handleEscape);
+            
+            // 监听游戏结束（通过检查游戏容器是否还存在）
+            const checkGameEnd = setInterval(function() {
+              if (!document.querySelector('.ASTEROIDSYEAH')) {
+                clearInterval(checkGameEnd);
+                resetGameState();
+                document.removeEventListener('keydown', handleEscape);
+              }
+            }, 1000);
+            
+          } else {
+            console.error('Asteroids game not loaded properly');
+            resetGameState();
+          }
+        } catch (error) {
+          console.error('Error starting asteroids game:', error);
+          resetGameState();
+        }
+      }
+      
+      // 重置游戏状态
+      function resetGameState() {
+        gameActive = false;
+        paperPlaneBtn.style.display = 'flex'; // 重新显示按钮
+        
+        // 清理可能残留的游戏元素
+        const gameElements = document.querySelectorAll('.ASTEROIDSYEAH, .ASTEROIDSBLINK');
+        gameElements.forEach(element => {
+          try {
+            if (element && element.parentNode) {
+              element.parentNode.removeChild(element);
+            }
+          } catch (e) {
+            console.warn('Error cleaning up game element:', e);
+          }
+        });
+        
+        // 清理body上的游戏相关class
+        document.body.classList.remove('ASTEROIDSYEAH', 'ASTEROIDSBLINK');
+        
+        // 清理html上的游戏相关class
+        document.documentElement.classList.remove('ASTEROIDSYEAH', 'ASTEROIDSBLINK');
+        
+        // 清理游戏相关的样式表
+        const gameStyles = document.querySelectorAll('#ASTEROIDSYEAHSTYLES, style[data-asteroids]');
+        gameStyles.forEach(style => {
+          try {
+            if (style && style.parentNode) {
+              style.parentNode.removeChild(style);
+            }
+          } catch (e) {
+            console.warn('Error cleaning up game styles:', e);
+          }
+        });
+        
+        // 清理canvas元素
+        const canvasElements = document.querySelectorAll('canvas[style*="position: fixed"], canvas[style*="z-index"]');
+        canvasElements.forEach(canvas => {
+          try {
+            if (canvas && canvas.parentNode) {
+              canvas.parentNode.removeChild(canvas);
+            }
+          } catch (e) {
+            console.warn('Error cleaning up canvas:', e);
+          }
+        });
+        
+        // 强制重置body样式
+        document.body.style.overflow = '';
+        document.body.style.margin = '';
+        document.body.style.padding = '';
+        
+        // 清理可能的事件监听器
+        document.removeEventListener('keydown', arguments.callee);
+      }
+      
+      // 页面卸载时清理
+      window.addEventListener('beforeunload', resetGameState);
+    });
+  </script>
+
+  <!--
+    - Custom Cat Cursor
+  -->
+  <div class="custom-cursor" id="customCursor">
+    <div class="cursor-paw"></div>
+  </div>
+
+  <!--
+    - Cat Cursor Script
+  -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const cursor = document.getElementById('customCursor');
+      const body = document.body;
+      
+      // 跟踪鼠标位置
+      document.addEventListener('mousemove', function(e) {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+      });
+      
+      // 检测可点击元素
+      const clickableElements = document.querySelectorAll('a, button, input, [onclick], [role="button"], .navbar-link, .sidebar-info button, .form-btn, .paper-plane-button');
+      
+      clickableElements.forEach(element => {
+        element.addEventListener('mouseenter', function() {
+          cursor.classList.add('cursor-hover');
+        });
+        
+        element.addEventListener('mouseleave', function() {
+          cursor.classList.remove('cursor-hover');
+        });
+      });
+      
+      // 点击效果
+      document.addEventListener('click', function(e) {
+        createClickEffect(e.clientX, e.clientY);
+      });
+      
+      function createClickEffect(x, y) {
+        const clickEffect = document.createElement('div');
+        clickEffect.className = 'cursor-click';
+        clickEffect.style.left = x + 'px';
+        clickEffect.style.top = y + 'px';
+        
+        // 创建猫脸SVG元素
+        clickEffect.innerHTML = `
+          <div class="cat-svg"></div>
+        `;
+        
+        body.appendChild(clickEffect);
+        
+        // 动画结束后移除元素
+        setTimeout(() => {
+          if (clickEffect.parentNode) {
+            clickEffect.parentNode.removeChild(clickEffect);
+          }
+        }, 600);
+      }
+      
+      // 鼠标离开页面时隐藏光标
+      document.addEventListener('mouseleave', function() {
+        cursor.style.opacity = '0';
+      });
+      
+      document.addEventListener('mouseenter', function() {
+        cursor.style.opacity = '1';
+      });
+    });
+  </script>
 
 </body>
 

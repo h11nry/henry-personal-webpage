@@ -48,6 +48,44 @@ start 'd:\CUHKSZ\my-portfolio-webpage\editor.html'
 
 或者直接双击根目录中的 `editor.html` 文件。
 
+## 🙏 致谢与鸣谢
+
+### 💖 感谢开源社区的杰出贡献者
+
+<div align="center">
+
+[![Live2D Widget](https://img.shields.io/badge/Live2D-Widget-ff69b4?style=for-the-badge&logo=anime&logoColor=white)](https://github.com/stevenjoezhang/live2d-widget)
+[![Stars](https://img.shields.io/github/stars/stevenjoezhang/live2d-widget?style=for-the-badge&color=yellow)](https://github.com/stevenjoezhang/live2d-widget/stargazers)
+[![Forks](https://img.shields.io/github/forks/stevenjoezhang/live2d-widget?style=for-the-badge&color=blue)](https://github.com/stevenjoezhang/live2d-widget/network/members)
+
+</div>
+
+> 💝 **特别感谢** [**@stevenjoezhang**](https://github.com/stevenjoezhang) 
+
+#### 🚀 Asteroids Game
+
+<div align="center">
+
+[![Asteroids Game](https://img.shields.io/badge/Paper_Plane-Game-00ff7f?style=for-the-badge&logo=javascript&logoColor=white)](https://github.com/stevenjoezhang/asteroids)
+[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://github.com/stevenjoezhang/asteroids)
+[![HTML5 Canvas](https://img.shields.io/badge/HTML5-Canvas-E34F26?style=for-the-badge&logo=html5&logoColor=white)](https://github.com/stevenjoezhang/asteroids)
+
+</div>
+
+> 🎮 **再次感谢** [**@stevenjoezhang**](https://github.com/stevenjoezhang) 
+
+#### 🏆 Live2D Models - 精美角色模型库
+
+<div align="center">
+
+[![Live2D Models](https://img.shields.io/badge/Live2D-Models-ff1493?style=for-the-badge&logo=github&logoColor=white)](https://github.com/xiazeyu/live2d-widget-models)
+[![CDN](https://img.shields.io/badge/CDN-jsDelivr-orange?style=for-the-badge&logo=jsdelivr&logoColor=white)](https://github.com/xiazeyu/live2d-widget-models)
+
+</div>
+
+> 🎨 **感谢** [**@xiazeyu**](https://github.com/xiazeyu) 的维护
+
+
 ## Acknowledgments
 
 This project is based on the amazing work by [codewithsadee](https://github.com/codewithsadee). Thank you for creating the original [vCard Personal Portfolio](https://github.com/codewithsadee/vcard-personal-portfolio) template!
