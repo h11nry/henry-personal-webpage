@@ -36,11 +36,45 @@
         }
         
         .blog-header {
+            position: relative;
             text-align: center;
             margin-bottom: 30px;
             padding: 20px;
             background: #333334;
             border-radius: 8px;
+        }
+        
+        .lang-switch {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 0;
+            padding: 8px 12px;
+            color: #ffffff;
+            font-size: 0.9em;
+            font-weight: 400;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            transition: color 0.3s ease;
+        }
+        
+        .lang-switch:hover {
+            color: #ffdb70;
+        }
+        
+        .lang-en.active,
+        .lang-zh.active {
+            color: #ffdb70;
+            font-weight: 600;
+        }
+        
+        .lang-separator {
+            margin: 0 4px;
+            opacity: 0.5;
         }
         
         .blog-header h1 {
@@ -621,57 +655,65 @@
             }
         }
     </style>
+    
+    <!-- Language Switch Script -->
+    <script src="../js/blog-lang-switch.js"></script>
 </head>
 
 <body>
     <div class="container">
         <header class="blog-header">
-            <h1>Henry's Blog</h1>
-            <a href="../../index.html#blog" class="back-link">← Back to Blog</a>
+            <button class="lang-switch" id="langSwitch">
+                <span class="lang-en">EN</span>
+                <span class="lang-separator">/</span>
+                <span class="lang-zh">中文</span>
+            </button>
+            <h1 data-en="Henry's Blog" data-zh="Henry 的博客">Henry's Blog</h1>
+            <a href="../../index.html#blog" class="back-link" data-en="← Back to Blog" data-zh="← 返回博客">← Back to Blog</a>
         </header>
 
         <article>
-            <h1 class="article-title">Photograph Gallery</h1>
+            <h1 class="article-title" data-en="Photograph Gallery" data-zh="摄影画廊">Photograph Gallery</h1>
             
             <div class="blog-meta">
-                <span class="blog-category">Photography</span>
+                <span class="blog-category" data-en="Photography" data-zh="摄影">Photography</span>
                 <span class="dot"></span>
                 <time datetime="2025-10-23">Oct 23, 2025</time>
             </div>
 
             <div class="content">
                 
-                <p> I love to take photo, in traveling or just in daily life. 
+                <p data-en="I love to take photo, in traveling or just in daily life. The idea is to record what I have been through, where did I go with who, and the in-person experience that is stored inside the scene, and therefore inside the picture. About the type of photography, I prefer street photography and landscape photography. Sometimes I also take portait photography, but it is basically always forced" data-zh="我喜欢拍照，无论是在旅行中还是在日常生活中。这个想法是为了记录我所经历的事情，我和谁去过哪里，以及储存在场景中因而储存在照片中的亲身体验。关于摄影类型，我更喜欢街头摄影和风景摄影。有时我也拍肖像摄影，但基本上总是被迫的。"> I love to take photo, in traveling or just in daily life. 
                     The idea is to record what I have been through, where did I go with who, 
                     and the in-person experience that is stored inside the scene, and therefore inside the picture. 
                     About the type of photography, I prefer street photography and landscape photography. Sometimes I also take portait photography, but it is basically always forced
                 </p>
 
-                <p>
+                <p data-en="The main gear of mine is a Nikon camera, with several lenses for different ranges. I have another Olympus 35ED film camera for fun as well. It was a gift from my girlfriend. Usually I do not take film photography, but you have to admit that film photos do provide a different vibrant color tone that almost all filters in digital photography cannot replace." data-zh="我的主要装备是一台尼康相机，配有几个不同焦段的镜头。我还有一台Olympus 35ED胶片相机，纯粹是为了好玩。它是我女朋友送的礼物。通常我不拍胶片摄影，但你不得不承认，胶片照片确实提供了一种不同的鲜艳色调，几乎所有数码摄影中的滤镜都无法替代。">
                     The main gear of mine is a Nikon camera, with several lenses for different ranges. I have another Olympus 35ED film camera for fun as well. It was a gift from my girlfriend. 
                     Usually I do not take film photography, but you have to admit that film photos do provide a different vibrant color tone that almost all filters in digital photography cannot replace.
                 </p>
 
-                <p>
+                <p data-en="Below are some of my favorite photos by myself. They are taken in a wide range of time, from 2022 summer to present. The style of mine is also changing over time, as I have learnt more about photography such as the picture structure, color tuning, and expressing the atmosphere. Hope you like them!" data-zh="下面是我自己最喜欢的一些照片。它们拍摄的时间跨度很大，从2022年夏天到现在。随着我学习了更多关于摄影的知识，比如画面结构、色彩调整和表达氛围，我的风格也在随着时间而改变。希望你喜欢它们！">
                     Below are some of my favorite photos by myself. They are taken in a wide range of time, from 2022 summer to present. The style of mine is also changing over time, as I have learnt more about photography such as the picture structure, color tuning, and expressing the atmosphere. 
                     Hope you like them!
                 </p>
 
                 <div class="special-box click-hint">
-                    <p>You can click on the images to view them in full size.</p>
+                    <p data-en="You can click on the images to view them in full size." data-zh="你可以点击图片查看完整尺寸。">You can click on the images to view them in full size.</p>
                 </div>
 
 
                 <!-- Featured image -->
                 <div class="image-container">
                     <img src="../images/photograph-gallery/top_pic.jpg" alt="Featured photograph from my collection" class="featured-image">
-                    <p class="image-caption">One of my favorite captures - taken on Cheung Chau island in Hong Kong</p>
-                    <p class="image-caption">By Olympus 35ED film camera</p>
+                    <p class="image-caption" data-en="One of my favorite captures - taken on Cheung Chau island in Hong Kong" data-zh="我最喜欢的照片之一 - 拍摄于香港长洲岛">One of my favorite captures - taken on Cheung Chau island in Hong Kong</p>
+                    <p class="image-caption" data-en="By Olympus 35ED film camera" data-zh="使用Olympus 35ED胶片相机拍摄">By Olympus 35ED film camera</p>
                 </div>
 
-                <h3>Street Photography Collection</h3>
+                <h3 data-en="Street Photography Collection" data-zh="街头摄影作品集">Street Photography Collection</h3>
 
-                <p>
+                <p data-en="Usuallt I don't have a specific scene preferred fro street photography, I just walk around the city and wait for the idea to hit me. Sometimes it is a specific lighting condition, sometimes it is a certain composition formed by the buildings" data-zh="通常我没有特别偏好的街头摄影场景，我只是在城市里走来走去，等待灵感的到来。有时是特定的光线条件，有时是由建筑物形成的某种构图。">
                     Usuallt I don't have a specific scene preferred fro street photography, I just walk around the city and wait for the idea to hit me.
                     Sometimes it is a specific lighting condition, sometimes it is a certain composition formed by the buildings
                 </p>
@@ -684,11 +726,11 @@
                         <img src="../images/photograph-gallery/photograph4.jpg" alt="Artistic photograph">
                     </div>
                 </div>
-                <p class="image-caption">Street photography collection: capturing spontaneous moments and urban landscapes</p>
+                <p class="image-caption" data-en="Street photography collection: capturing spontaneous moments and urban landscapes" data-zh="街头摄影作品集：捕捉自发的瞬间和城市景观">Street photography collection: capturing spontaneous moments and urban landscapes</p>
 
-                <h3>Landscape & Nature</h3>
+                <h3 data-en="Landscape & Nature" data-zh="风景与自然">Landscape & Nature</h3>
 
-                <p>
+                <p data-en="Besides street photography, I also love toe take pictures related to nature. It is also more like a flashing idea to me, such as after a heavy rain, or after a snowstorm. The atmosphere and body of nature have shown the beauty of them. Flowers are one of my favorites, as you can see below with 3 pictures." data-zh="除了街头摄影，我也喜欢拍摄与自然相关的照片。对我来说，这更像是一个闪现的想法，比如大雨过后，或者暴风雪过后。自然的氛围和身躯展现了它们的美。花卉是我的最爱之一，正如你在下面的3张图片中看到的那样。">
                     Besides street photography, I also love toe take pictures related to nature. It is also more like a flashing idea to me,
                     such as after a heavy rain, or after a snowstorm. The atmosphere and body of nature have shown the beauty of them. Flowers are 
                     one of my favorites, as you can see below with 3 pictures.
@@ -700,12 +742,12 @@
                     <img src="../images/photograph-gallery/photograph6.jpg" alt="Nature photograph">
                     <img src="../images/photograph-gallery/photograph1.jpg" alt="Scenic view photograph">
                 </div>
-                <p class="image-caption">Nature and landscape photography: exploring different terrains and natural lighting</p>
+                <p class="image-caption" data-en="Nature and landscape photography: exploring different terrains and natural lighting" data-zh="自然和风景摄影：探索不同的地形和自然光线">Nature and landscape photography: exploring different terrains and natural lighting</p>
 
                 <!-- Quote box -->
                 <div class="quote-box">
-                    "Photography is the story I fail to put into words. Sometimes you just be slient, and watch. The idea will come to you naturally"
-                    <span class="quote-author">— Personal Photography Philosophy</span>
+                    <span data-en="Photography is the story I fail to put into words. Sometimes you just be slient, and watch. The idea will come to you naturally" data-zh="摄影是我无法用言语表达的故事。有时你只需保持沉默，观看。灵感会自然而然地来到你身边。">"Photography is the story I fail to put into words. Sometimes you just be slient, and watch. The idea will come to you naturally"</span>
+                    <span class="quote-author" data-en="— Personal Photography Philosophy" data-zh="— 个人摄影哲学">— Personal Photography Philosophy</span>
                 </div>
 
                 <!-- Compact gallery layout -->
@@ -714,13 +756,13 @@
                     <img src="../images/photograph-gallery/photograph9.jpg" alt="Creative photograph">
                     <img src="../images/photograph-gallery/photograph10.jpg" alt="Final photograph in collection">
                 </div>
-                <p class="image-caption">Artistic compositions and creative experiments with light, shadow, and perspective</p>
-                <p class="image-caption">Last two photos are taken in black and white film. This is the first time I try B&W film, and the result is satisfying, at least to me it is.</p>
+                <p class="image-caption" data-en="Artistic compositions and creative experiments with light, shadow, and perspective" data-zh="艺术构图和光影透视的创意实验">Artistic compositions and creative experiments with light, shadow, and perspective</p>
+                <p class="image-caption" data-en="Last two photos are taken in black and white film. This is the first time I try B&W film, and the result is satisfying, at least to me it is." data-zh="最后两张照片是用黑白胶片拍摄的。这是我第一次尝试黑白胶片，结果很令人满意，至少对我来说是这样。">Last two photos are taken in black and white film. This is the first time I try B&W film, and the result is satisfying, at least to me it is.</p>
 
                 <!-- Photography insight box -->
                 <div class="movie-highlight">
-                    <h4>📸 Photography Insights</h4>
-                    <p>
+                    <h4 data-en="📸 Photography Insights" data-zh="📸 摄影见解">📸 Photography Insights</h4>
+                    <p data-en="Each photograph represents a learning experience. From understanding natural lighting to mastering composition rules, every shot teaches me something new about both the technical and artistic aspects of photography." data-zh="每张照片都代表了一次学习经验。从理解自然光线到掌握构图规则，每一次拍摄都教会了我关于摄影技术和艺术方面的新知识。">
                         Each photograph represents a learning experience. From understanding natural lighting to mastering composition rules, 
                         every shot teaches me something new about both the technical and artistic aspects of photography.
                     </p>
@@ -728,8 +770,8 @@
 
                 <!-- Conclusion box -->
                 <div class="conclusion">
-                    <h4>Photography Journey</h4>
-                    <p>
+                    <h4 data-en="Photography Journey" data-zh="摄影之旅">Photography Journey</h4>
+                    <p data-en="This collection represents just a small portion of my photographic journey. Each image holds memories, emotions, and stories that continue to inspire my passion for capturing life through the lens." data-zh="这个作品集只代表了我摄影之旅的一小部分。每张图片都承载着记忆、情感和故事，它们继续激励着我通过镜头捕捉生活的热情。">
                         This collection represents just a small portion of my photographic journey. Each image holds memories, 
                         emotions, and stories that continue to inspire my passion for capturing life through the lens.
                     </p>

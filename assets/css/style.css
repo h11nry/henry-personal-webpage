@@ -1470,11 +1470,22 @@ textarea.form-input::-webkit-resizer { display: none; }
    * #NAVBAR
    */
 
-  .navbar { border-radius: 20px 20px 0 0; }
+  .navbar { 
+    border-radius: 20px 20px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 15px;
+  }
 
   .navbar-list { gap: 20px; }
 
   .navbar-link { --fs-8: 14px; }
+
+  .navbar .lang-switch {
+    display: flex;
+    font-size: var(--fs-8);
+  }
 
 
 
@@ -1813,6 +1824,40 @@ textarea.form-input::-webkit-resizer { display: none; }
   }
 
   .navbar-link { font-weight: var(--fw-500); }
+
+  /* Language Switch Button */
+  .lang-switch {
+    display: none;
+  }
+
+  .navbar .lang-switch {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 10px 15px;
+    color: var(--white-1);
+    font-size: var(--fs-8);
+    font-weight: var(--fw-400);
+    background: transparent;
+    border: none;
+    transition: color var(--transition-1);
+    cursor: pointer;
+  }
+
+  .navbar .lang-switch:hover {
+    color: var(--orange-yellow-crayola);
+  }
+
+  .lang-en.active,
+  .lang-zh.active {
+    color: var(--orange-yellow-crayola);
+    font-weight: var(--fw-500);
+  }
+
+  .lang-separator {
+    margin: 0 4px;
+    opacity: 0.5;
+  }
 
 
 

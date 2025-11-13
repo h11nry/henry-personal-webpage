@@ -364,9 +364,6 @@
             }
         }
     </style>
-    
-    <!-- Language Switch Script -->
-    <script src="../js/blog-lang-switch.js"></script>
 </head>
 
 <body>
@@ -382,10 +379,10 @@
         </header>
 
         <article>
-            <h1 class="article-title" data-en="One person; Many faces" data-zh="一人；千面">One person; Many faces</h1>
+            <h1 class="article-title">One person; Many faces</h1>
             
             <div class="blog-meta">
-                <span class="blog-category" data-en="Film" data-zh="电影">Film</span>
+                <span class="blog-category">Film</span>
                 <span class="dot"></span>
                 <time datetime="2025-10-19">Oct 19, 2025</time>
             </div>
@@ -393,92 +390,92 @@
             <img src="../images/one-person-many-faces/Quentin-Tarantino-Movies.webp" alt="One person; Many faces" class="featured-image">
 
             <div class="content">
-                <p data-en="If you have ever watched a Quentin Tarantino film, and you watch it for the first time, you will probably be confused: 'What the heck does this guy try to say?' The magical part, but also funny part, is that the film of Tarantino is always long as hell, but you will never feel bored so that you just want to turn it off or switch to something else." data-zh="如果你曾经看过昆汀·塔伦蒂诺的电影，而且是第一次看，你可能会感到困惑："这家伙到底想说什么？"神奇的地方，也是有趣的地方在于，塔伦蒂诺的电影总是长得要命，但你永远不会感到无聊以至于想要关掉它或者切换到其他东西。">
+                <p>
                     If you have ever watched a Quentin Tarantino film, and you watch it for the first time, you will probably 
                     be confused: "What the heck does this guy try to say?" The magical part, but also funny part, is that the 
                     film of Tarantino is always long as hell, but you will never feel bored so that you just want to turn it off or 
                     switch to something else.
                 </p>
 
-                <p data-en="Why is that magical? It is very obvious and intuitive. A film that can attract viewers like a magnet, is a good film. A long long film that can keep viewers' attention all the way from second 1 to the end, is magical." data-zh="为什么说这很神奇？这是非常明显和直观的。一部能像磁铁一样吸引观众的电影，就是一部好电影。一部能从头到尾一直保持观众注意力的长片，就是神奇的。">
+                <p>
                     Why is that magical? It is very obvious and intuitive. A film that can attract viewers like a magnet, is a good film. 
                     A long long film that can keep viewers' attention all the way from second 1 to the end, is magical.
                 </p>
 
-                <p data-en="Then why is it funny? Because even you have finished the film like you have drinked a whole cup of cold milk, you may feel happy, or excited, and you will never end in the middle, but you just don't really understand what does Quentin want to say. It is the fact that you can still feel satisfied but confused at the same time makes it so funny." data-zh="那为什么说有趣呢？因为即使你看完了整部电影，就像喝完了一整杯冷牛奶，你可能会感到快乐或兴奋，你永远不会中途放弃，但你就是不太明白昆汀想说什么。这种既满足又困惑的感觉同时存在的事实让它如此有趣。">
+                <p>
                     Then why is it funny? Because even you have finished the film like you have drinked a whole cup of cold milk, you may feel happy, 
                     or excited, and you will never end in the middle, but you just don't really understand what does Quentin want to say. It is the fact 
                     that you can still feel satisfied but confused at the same time makes it so funny.
                 </p>
 
-                <h3 data-en="The Tarantino Character Formula" data-zh="塔伦蒂诺的角色公式">The Tarantino Character Formula</h3>
+                <h3>The Tarantino Character Formula</h3>
 
-                <p data-en="Tarantino doesn't just write dialogue; he creates entire personalities. Consider the stark contrast between characters played by the same actors across his films:" data-zh="塔伦蒂诺不仅仅是写对白；他创造的是完整的人格。想想同一位演员在他不同电影中扮演的角色之间的鲜明对比：">
+                <p>
                     Tarantino doesn't just write dialogue; he creates entire personalities. Consider the stark contrast between 
                     characters played by the same actors across his films:
                 </p>
 
                 <div class="special-box character-box">
-                    <h4 data-en="Samuel L. Jackson's Evolution" data-zh="塞缪尔·L·杰克逊的演变">Samuel L. Jackson's Evolution</h4>
+                    <h4>Samuel L. Jackson's Evolution</h4>
                     <ul>
-                        <li data-en="Jules Winnfield (Pulp Fiction): A philosophical hitman finding spiritual redemption" data-zh="朱尔斯·温菲尔德（《低俗小说》）：一个寻求精神救赎的哲学杀手"><strong>Jules Winnfield (Pulp Fiction):</strong> A philosophical hitman finding spiritual redemption</li>
-                        <li data-en="Stephen (Django Unchained): A manipulative house slave with hidden agendas" data-zh="斯蒂芬（《被解放的姜戈》）：一个心怀不轨的操纵型家奴"><strong>Stephen (Django Unchained):</strong> A manipulative house slave with hidden agendas</li>
-                        <li data-en="Major Marquis Warren (The Hateful Eight): A bounty hunter seeking justice in a world of moral ambiguity" data-zh="马奎斯·沃伦少校（《八恶人》）：在道德模糊的世界中寻求正义的赏金猎人"><strong>Major Marquis Warren (The Hateful Eight):</strong> A bounty hunter seeking justice in a world of moral ambiguity</li>
+                        <li><strong>Jules Winnfield (Pulp Fiction):</strong> A philosophical hitman finding spiritual redemption</li>
+                        <li><strong>Stephen (Django Unchained):</strong> A manipulative house slave with hidden agendas</li>
+                        <li><strong>Major Marquis Warren (The Hateful Eight):</strong> A bounty hunter seeking justice in a world of moral ambiguity</li>
                     </ul>
                 </div>
 
                 <div class="side-by-side">
                     <div>
                         <img src="../images/one-person-many-faces/Pulp-Fiction-samuel.webp" alt="Samuel L. Jackson as Jules in Pulp Fiction" class="character-image">
-                        <p class="image-caption" data-en="Jules Winnfield in Pulp Fiction" data-zh="《低俗小说》中的朱尔斯·温菲尔德">Jules Winnfield in Pulp Fiction</p>
+                        <p class="image-caption">Jules Winnfield in Pulp Fiction</p>
                     </div>
                     <div>
                         <img src="../images/one-person-many-faces/django_samuel.png" alt="Samuel L. Jackson as Stephen in Django" class="character-image">
-                        <p class="image-caption" data-en="Stephen in Django Unchained" data-zh="《被解放的姜戈》中的斯蒂芬">Stephen in Django Unchained</p>
+                        <p class="image-caption">Stephen in Django Unchained</p>
                     </div>
 
                 </div>
                
                 <div class="image-container">
                     <img src="../images/one-person-many-faces/hateful-eight-sam-jackson.webp" alt="Samuel L. Jackson as Major Warren in The Hateful Eight" class="inline-image">
-                    <p class="image-caption" data-en="Samuel L. Jackson's iconic performance as Major Warren" data-zh="塞缪尔·L·杰克逊饰演沃伦少校的标志性表演">Samuel L. Jackson's iconic performance as Major Warren</p>
+                    <p class="image-caption">Samuel L. Jackson's iconic performance as Major Warren</p>
                 </div>
 
                 <div class="quote-box">
-                    <span data-en="Quentin writes characters, not parts. When you read his scripts, you know exactly who this person is, how they think, how they move, even how they would order coffee." data-zh="昆汀写的是角色，不是配角。当你读他的剧本时，你会清楚地知道这个人是谁，他们怎么想，怎么动，甚至怎么点咖啡。">"Quentin writes characters, not parts. When you read his scripts, you know exactly who this person is, 
-                    how they think, how they move, even how they would order coffee."</span>
+                    "Quentin writes characters, not parts. When you read his scripts, you know exactly who this person is, 
+                    how they think, how they move, even how they would order coffee."
                     <span class="quote-author">— Samuel L. Jackson</span>
                 </div>
 
-                <p data-en="Samuel Jackson is really amazing. You can really feel the personal charms he expresses through different characters. Somebody may think that it is mainly because the performance of Samuel Jackson himself that contributes to the success of these characters, but it is actually the deep character development done by Quentin Tarantino that provides a solid foundation. I am not trying to undermine the ability of Samuel Jackson. In fact, Jules played by him in 'Pulp Fiction' is one of my favorite characters across films and movies." data-zh="塞缪尔·杰克逊真的很了不起。你可以真切地感受到他通过不同角色所表达的个人魅力。有人可能认为，这些角色的成功主要归功于塞缪尔·杰克逊本人的表演，但实际上，是昆汀·塔伦蒂诺深入的角色塑造提供了坚实的基础。我并不是想贬低塞缪尔·杰克逊的能力。事实上，他在《低俗小说》中扮演的朱尔斯是我在所有电影中最喜欢的角色之一。">
+                <p>
                   Samuel Jackson is really amazing. You can really feel the personal charms he expresses through different characters. 
                   Somebody may think that it is mainly because the performance of Samuel Jackson himself that contributes to the success of these characters, but 
                   it is actually the deep character development done by Quentin Tarantino that provides a solid foundation. I am not trying to undermine the ability of 
                   Samuel Jackson. In fact, Jules played by him in "Pulp Fiction" is one of my favorite characters across films and movies.
                 </p>
 
-                <p data-en="It is really hard to find two characters in Quantin's films that share same or even similar personality traits. That's why the title 'One person; Many faces'. From Quantin's perspective, he chose these actors / actresses because he believes the character designed by him can be perfectly portrayed by these people. He may not consider that these actors have already form some specific image in the audience's mind due to their previous works, or have participated in some films by himself, playing someone who is completely different from the character he is going to play in the new film." data-zh="在昆汀的电影中，很难找到两个性格特征相同或相似的角色。这就是"一人；千面"这个标题的由来。从昆汀的角度来看，他选择这些演员，是因为他相信自己设计的角色可以被这些人完美地刻画出来。他可能没有考虑到这些演员由于之前的作品已经在观众心中形成了某些特定的形象，或者已经参与过他自己的一些电影，扮演的角色与即将扮演的角色完全不同。">
+                <p>
                   It is really hard to find two characters in Quantin's films that share same or even similar personality traits. That's why the title "One person; Many faces". 
                   From Quantin's perspective, he chose these actors / actresses because he believes the character designed by him can be perfectly portrayed by these people. He may 
                   not consider that these actors have already form some specific image in the audience's mind due to their previous works, or have participated in some films by himself, playing 
                   someone who is completely different from the character he is going to play in the new film. 
                 </p>
 
-                <p data-en="What Quentin cares more is whether these actors can fully embody the character he has created. Previous cooperation experience serves as reference test, so it is natural why Quantin likes to work with some actors / actresses again and again, such as Samuel Jackson, Uma Thurman, Tim Roth, Michael Madsen, Brad Pitt, etc." data-zh="昆汀更关心的是这些演员能否充分体现他所创造的角色。以前的合作经验可以作为参考测试，所以昆汀喜欢一次又一次地与某些演员合作就很自然了，比如塞缪尔·杰克逊、乌玛·瑟曼、蒂姆·罗斯、迈克尔·马德森、布拉德·皮特等。">
+                <p>
                   What Quentin cares more is whether these actors can fully embody the character he has created. 
                   Previous cooperation experience serves as reference test, so it is natural why Quantin likes to work with some actors / actresses again and again, such as Samuel Jackson, Uma Thurman, Tim Roth, Michael Madsen, Brad Pitt, etc.
                 </p>
 
-                <h3 data-en="Iconic Transformations" data-zh="标志性的转变">Iconic Transformations</h3>
+                <h3>Iconic Transformations</h3>
 
-                <p data-en="Some of the most memorable character transformations in Tarantino's filmography showcase this collaborative magic between director and actor:" data-zh="塔伦蒂诺电影中一些最令人难忘的角色转变展示了导演和演员之间的合作魔力：">
+                <p>
                     Some of the most memorable character transformations in Tarantino's filmography showcase this collaborative 
                     magic between director and actor:
                 </p>
 
                 <div class="movie-highlight">
-                    <h4 data-en="🎬 Kill Bill: The Bride's Journey" data-zh="🎬 《杀死比尔》：新娘的旅程">🎬 Kill Bill: The Bride's Journey</h4>
-                    <p data-en="Uma Thurman's Beatrix Kiddo isn't just seeking revenge—she's reclaiming her identity. Tarantino crafted a character who could be simultaneously vulnerable mother and lethal assassin, requiring Thurman to master both emotional depth and physical prowess." data-zh="乌玛·瑟曼饰演的贝娅特丽克丝·基多不仅仅是在寻求复仇——她在重新夺回自己的身份。塔伦蒂诺创造了一个既是脆弱的母亲又是致命杀手的角色，要求瑟曼同时掌握情感深度和身体技能。">
+                    <h4>🎬 Kill Bill: The Bride's Journey</h4>
+                    <p>
                         Uma Thurman's Beatrix Kiddo isn't just seeking revenge—she's reclaiming her identity. Tarantino crafted 
                         a character who could be simultaneously vulnerable mother and lethal assassin, requiring Thurman to 
                         master both emotional depth and physical prowess.
@@ -486,21 +483,21 @@
                 </div>
 
                 <div class="movie-highlight">
-                    <h4 data-en="🍔 Pulp Fiction: Vincent Vega's Cool" data-zh="🍔 《低俗小说》：文森特·维加的酷">🍔 Pulp Fiction: Vincent Vega's Cool</h4>
-                    <p data-en="John Travolta's career resurrection came through Vincent Vega, a character so specifically written that it required Travolta to unlearn decades of Danny Zuko charm and embrace a new kind of dangerous cool." data-zh="约翰·特拉沃尔塔的职业生涯复苏来自文森特·维加这个角色，这个角色写得如此具体，以至于要求特拉沃尔塔忘掉几十年的丹尼·祖科魅力，拥抱一种新的危险的酷。">
+                    <h4>🍔 Pulp Fiction: Vincent Vega's Cool</h4>
+                    <p>
                         John Travolta's career resurrection came through Vincent Vega, a character so specifically written that 
                         it required Travolta to unlearn decades of Danny Zuko charm and embrace a new kind of dangerous cool.
                     </p>
                 </div>
                
-                <h3 data-en="The Ripple Effect" data-zh="涟漪效应">The Ripple Effect</h3>
+                <h3>The Ripple Effect</h3>
 
-                <p data-en="What's remarkable is how these character transformations often reshape actors' entire careers. Many actors describe their Tarantino roles as career-defining moments that changed how they approach their craft." data-zh="值得注意的是，这些角色转变往往会重塑演员的整个职业生涯。许多演员将他们在塔伦蒂诺电影中的角色描述为改变他们对待表演方式的职业生涯定义时刻。">
+                <p>
                     What's remarkable is how these character transformations often reshape actors' entire careers. Many actors 
                     describe their Tarantino roles as career-defining moments that changed how they approach their craft.
                 </p>
 
-                <p data-en="The collaboration between Tarantino and his actors creates something magical: characters so fully realized that they feel like they could walk off the screen and live independent lives. This is the true artistry behind 'one person, many faces'—not just an actor playing different roles, but a complete metamorphosis guided by a director who understands that great characters are the heart of great storytelling." data-zh="塔伦蒂诺与演员之间的合作创造了一些神奇的东西：角色如此充分地实现，以至于他们感觉可以走出屏幕，过着独立的生活。这就是"一人；千面"背后的真正艺术——不仅仅是一个演员扮演不同的角色，而是在一位理解伟大角色是伟大故事核心的导演的指导下完成的蜕变。">
+                <p>
                     The collaboration between Tarantino and his actors creates something magical: characters so fully realized 
                     that they feel like they could walk off the screen and live independent lives. This is the true artistry 
                     behind <em>"one person, many faces"</em>—not just an actor playing different roles, but a complete metamorphosis 
@@ -514,8 +511,8 @@
                 -->
 
                 <div class="conclusion">
-                    <h4 data-en="🎭 The Final Take" data-zh="🎭 最后一幕">🎭 The Final Take</h4>
-                    <p data-en="In Tarantino's world, actors don't just perform—they become. And in that becoming, they create characters that live on long after the credits roll, proving that the magic of cinema lies not just in what we see, but in who we believe these characters truly are." data-zh="在塔伦蒂诺的世界里，演员不仅仅是表演——他们成为角色。在这种转变中，他们创造了在片尾字幕滚动后仍然存在的角色，证明了电影的魔力不仅在于我们看到的东西，还在于我们相信这些角色真正是谁。">
+                    <h4>🎭 The Final Take</h4>
+                    <p>
                         In Tarantino's world, actors don't just perform—they become. And in that becoming, they create characters 
                         that live on long after the credits roll, proving that the magic of cinema lies not just in what we see, 
                         but in who we believe these characters truly are.

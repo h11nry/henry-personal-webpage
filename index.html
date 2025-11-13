@@ -48,11 +48,11 @@
         <div class="info-content">
           <h1 class="name" title="Henry">Henry</h1>
 
-          <p class="title">Little Nobody</p>
+          <p class="title" data-en="Little Nobody" data-zh="无名小卒">Little Nobody</p>
         </div>
 
         <button class="info_more-btn" data-sidebar-btn>
-          <span>Show Contacts</span>
+          <span data-en="Show Contacts" data-zh="显示联系方式">Show Contacts</span>
 
           <ion-icon name="chevron-down"></ion-icon>
         </button>
@@ -72,7 +72,7 @@
             </div>
 
             <div class="contact-info">
-              <p class="contact-title">Email</p>
+              <p class="contact-title" data-en="Email" data-zh="邮箱">Email</p>
 
               <a href="mailto:h3nryhu@gmail.com" class="contact-link">h3nryhu@gmail.com</a>
             </div>
@@ -100,9 +100,9 @@
             </div>
 
             <div class="contact-info">
-              <p class="contact-title">Birthday of my cat</p>
+              <p class="contact-title" data-en="Birthday of my cat" data-zh="我的猫的生日">Birthday of my cat</p>
 
-              <time datetime="2003-11-01">Someday, 2025</time>
+              <time datetime="2003-11-01" data-en="Someday, 2025" data-zh="2025年的某一天">Someday, 2025</time>
             </div>
 
           </li>
@@ -114,9 +114,9 @@
             </div>
 
             <div class="contact-info">
-              <p class="contact-title">Location</p>
+              <p class="contact-title" data-en="Location" data-zh="地点">Location</p>
 
-              <address>Shenzhen, Guangdong, China</address>
+              <address data-en="Shenzhen, Guangdong, China" data-zh="中国广东深圳">Shenzhen, Guangdong, China</address>
             </div>
 
           </li>
@@ -170,26 +170,32 @@
         <ul class="navbar-list">
 
           <li class="navbar-item">
-            <button class="navbar-link  active" data-nav-link>About</button>
+            <button class="navbar-link  active" data-nav-link data-en="About" data-zh="关于">About</button>
           </li>
 
           <li class="navbar-item">
-            <button class="navbar-link" data-nav-link>Resume</button>
+            <button class="navbar-link" data-nav-link data-en="Resume" data-zh="简历">Resume</button>
           </li>
 
           <li class="navbar-item">
-            <button class="navbar-link" data-nav-link>Portfolio</button>
+            <button class="navbar-link" data-nav-link data-en="Portfolio" data-zh="作品集">Portfolio</button>
           </li>
 
           <li class="navbar-item">
-            <button class="navbar-link" data-nav-link>Blog</button>
+            <button class="navbar-link" data-nav-link data-en="Blog" data-zh="博客">Blog</button>
           </li>
 
           <li class="navbar-item">
-            <button class="navbar-link" data-nav-link>Contact</button>
+            <button class="navbar-link" data-nav-link data-en="Contact" data-zh="联系">Contact</button>
           </li>
 
         </ul>
+
+        <button class="lang-switch" id="langSwitch">
+          <span class="lang-en">EN</span>
+          <span class="lang-separator">/</span>
+          <span class="lang-zh">中文</span>
+        </button>
 
       </nav>
 
@@ -204,17 +210,17 @@
       <article class="about  active" data-page="about">
 
         <header>
-          <h2 class="h2 article-title">About me</h2>
+          <h2 class="h2 article-title" data-en="About me" data-zh="关于我">About me</h2>
         </header>
 
         <section class="about-text">
-          <p>
+          <p data-en="I'm currently an undergraduate student at The Chinese University of Hong Kong, Shenzhen, majoring in Electronic and Computer Science. My future goal is to become a digital IC designer. I am apply master's programs to further my studies in this field." data-zh="我目前是香港中文大学（深圳）的本科生，主修电子与计算机科学。我未来的目标是成为一名数字集成电路设计师。我正在申请硕士项目以在这一领域深造。">
             I'm currently an undergraduate student at The Chinese University of Hong Kong, Shenzhen, 
             majoring in Electronic and Computer Science. My future goal is to become a digital IC designer. I am apply master's 
             programs to further my studies in this field.
           </p>
 
-          <p>
+          <p data-en="Besides all the things from school and acamdemics, I also have interestes and hobbies. I am a movie lover, and my fravorite file director is Quentin Tarantino. His movies always have unique storytelling techniques and colorful characters. You can really see how important this film is to him. I also enjoy photography (more into the tech part of it) and traveling." data-zh="除了学校和学业的事情，我也有自己的兴趣爱好。我是一个电影爱好者，我最喜欢的电影导演是昆汀·塔伦蒂诺。他的电影总是有独特的叙事技巧和丰富多彩的角色。你真的可以看出这部电影对他来说有多么重要。我还喜欢摄影（更多的是技术方面）和旅行。">
             Besides all the things from school and acamdemics, I also have interestes and hobbies.
             I am a movie lover, and my fravorite file director is Quentin Tarantino. 
             His movies always have unique storytelling techniques and colorful characters. You can really see how important this film is to him.
@@ -230,7 +236,7 @@
 
         <section class="service">
 
-          <h3 class="h3 service-title">What i'm doing</h3>
+          <h3 class="h3 service-title" data-en="What i'm doing" data-zh="我在做什么">What i'm doing</h3>
 
           <ul class="service-list">
 
@@ -258,9 +264,9 @@
               </div>
 
               <div class="service-content-box">
-                <h4 class="h4 service-item-title">Circuit Design</h4>
+                <h4 class="h4 service-item-title" data-en="Circuit Design" data-zh="电路设计">Circuit Design</h4>
 
-                <p class="service-item-text">
+                <p class="service-item-text" data-en="I design digital integrated circuits, mainly on Verilog HDL and MATLAB." data-zh="我设计数字集成电路，主要使用Verilog HDL和MATLAB。">
                   I design digital integrated circuits, mainly on Verilog HDL and MATLAB.
                 </p>
               </div>
@@ -274,9 +280,9 @@
               </div>
 
               <div class="service-content-box">
-                <h4 class="h4 service-item-title">Learning and Development</h4>
+                <h4 class="h4 service-item-title" data-en="Learning and Development" data-zh="学习和发展">Learning and Development</h4>
 
-                <p class="service-item-text">
+                <p class="service-item-text" data-en="Currently learning more about analog circuit design, specifically in CMOS RFIC and Power Electronincs." data-zh="目前正在学习更多关于模拟电路设计的知识，特别是CMOS RFIC和电力电子方面。">
                   Currently learning more about analog circuit design, specifically in CMOS RFIC and Power Electronincs.
                 </p>
               </div>
@@ -290,9 +296,9 @@
               </div>
 
               <div class="service-content-box">
-                <h4 class="h4 service-item-title">Photography</h4>
+                <h4 class="h4 service-item-title" data-en="Photography" data-zh="摄影">Photography</h4>
 
-                <p class="service-item-text">
+                <p class="service-item-text" data-en="I take photos mainly during my travels, but I don't really have much time to travel." data-zh="我主要在旅行时拍照，但我真的没有太多时间去旅行。">
                   I take photos mainly during my travels, but I don't really have much time to travel.
                 </p>
               </div>
@@ -307,9 +313,9 @@
               </div>
 
               <div class="service-content-box">
-                <h4 class="h4 service-item-title">Film Reviewing</h4>
+                <h4 class="h4 service-item-title" data-en="Film Reviewing" data-zh="电影评论">Film Reviewing</h4>
 
-                <p class="service-item-text">
+                <p class="service-item-text" data-en="Sometimes I will write analysis to break down characters in the films, or try to understand what does the director want to express." data-zh="有时我会写分析来拆解电影中的人物，或者试图理解导演想要表达什么。">
                   Sometimes I will write analysis to break down characters in the films, or 
                   try to understand what does the director want to express.
                 </p>
@@ -533,7 +539,7 @@
       <article class="resume" data-page="resume">
 
         <header>
-          <h2 class="h2 article-title">Resume</h2>
+          <h2 class="h2 article-title" data-en="Resume" data-zh="简历">Resume</h2>
         </header>
 
         <section class="timeline">
@@ -543,18 +549,18 @@
               <ion-icon name="book-outline"></ion-icon>
             </div>
 
-            <h3 class="h3">Education</h3>
+            <h3 class="h3" data-en="Education" data-zh="教育经历">Education</h3>
           </div>
 
           <ol class="timeline-list">
 
             <li class="timeline-item">
 
-              <h4 class="h4 timeline-item-title">The Chinese University of Hong Kong, Shenzhen</h4>
+              <h4 class="h4 timeline-item-title" data-en="The Chinese University of Hong Kong, Shenzhen" data-zh="香港中文大学（深圳）">The Chinese University of Hong Kong, Shenzhen</h4>
 
               <span>2022 - 2026</span>
 
-              <p class="timeline-text">
+              <p class="timeline-text" data-en="Currently pursuing a Bachelor's degree in Electronic and Computer Science in CUHK(SZ)." data-zh="目前在香港中文大学（深圳）攻读电子与计算机科学学士学位。">
                 Currently pursuing a Bachelor's degree in Electronic and Computer Science in CUHK(SZ).
               </p>
 
@@ -598,18 +604,18 @@
               <ion-icon name="book-outline"></ion-icon>
             </div>
 
-            <h3 class="h3">Experience</h3>
+            <h3 class="h3" data-en="Experience" data-zh="工作经历">Experience</h3>
           </div>
 
           <ol class="timeline-list">
 
             <li class="timeline-item">
 
-              <h4 class="h4 timeline-item-title">Develop and Test Intern</h4>
+              <h4 class="h4 timeline-item-title" data-en="Develop and Test Intern" data-zh="开发与测试实习生">Develop and Test Intern</h4>
 
               <span>06/2025 - 08/2025</span>
 
-              <p class="timeline-text">
+              <p class="timeline-text" data-en="Contributed to the full-cycle development of a dedicated sensor test PCB, where I was responsible for translating testing requirements into detailed circuit schematics and performing multi-layer PCB layout using Altium Designer to ensure signal integrity." data-zh="参与专用传感器测试PCB的全周期开发，负责将测试需求转化为详细的电路原理图，并使用Altium Designer进行多层PCB布局以确保信号完整性。">
                 Contributed to the full-cycle development of a dedicated sensor test PCB, where I was responsible for translating testing requirements 
                 into detailed circuit schematics and performing multi-layer PCB layout using Altium Designer to ensure signal integrity.
               </p>
@@ -618,11 +624,11 @@
 
             <li class="timeline-item">
 
-              <h4 class="h4 timeline-item-title">Undergraduate Research Assistant</h4>
+              <h4 class="h4 timeline-item-title" data-en="Undergraduate Research Assistant" data-zh="本科生研究助理">Undergraduate Research Assistant</h4>
 
-              <span>2024 - present</span>
+              <span data-en="2024 - present" data-zh="2024 - 至今">2024 - present</span>
 
-              <p class="timeline-text">
+              <p class="timeline-text" data-en="Worked as undergraduate research assistant under Prof. Liang Wu at CUHK(SZ), focusing on CMOS RFIC design and specifically in PLL design." data-zh="在香港中文大学（深圳）吴亮教授的指导下担任本科生研究助理，专注于CMOS RFIC设计，特别是PLL设计。">
                 Worked as undergraduate research assistant under Prof. Liang Wu at CUHK(SZ), focusing on CMOS RFIC design and specifically in PLL design.
               </p>
 
@@ -648,7 +654,7 @@
 
         <section class="skill">
 
-          <h3 class="h3 skills-title">My skills</h3>
+          <h3 class="h3 skills-title" data-en="My skills" data-zh="我的技能">My skills</h3>
 
           <ul class="skills-list content-card">
 
@@ -721,7 +727,7 @@
       <article class="portfolio" data-page="portfolio">
 
         <header>
-          <h2 class="h2 article-title">Portfolio</h2>
+          <h2 class="h2 article-title" data-en="Portfolio" data-zh="作品集">Portfolio</h2>
         </header>
 
         <section class="projects">
@@ -729,19 +735,19 @@
           <ul class="filter-list">
 
             <li class="filter-item">
-              <button class="active" data-filter-btn>All</button>
+              <button class="active" data-filter-btn data-en="All" data-zh="全部">All</button>
             </li>
 
             <li class="filter-item">
-              <button data-filter-btn>Hardware projects</button>
+              <button data-filter-btn data-en="Hardware projects" data-zh="硬件项目">Hardware projects</button>
             </li>
 
             <li class="filter-item">
-              <button data-filter-btn>Software projects</button>
+              <button data-filter-btn data-en="Software projects" data-zh="软件项目">Software projects</button>
             </li>
 
             <li class="filter-item">
-              <button data-filter-btn>Photography</button>
+              <button data-filter-btn data-en="Photography" data-zh="摄影">Photography</button>
             </li>
 
           </ul>
@@ -750,7 +756,7 @@
 
             <button class="filter-select" data-select>
 
-              <div class="select-value" data-selecct-value>Select category</div>
+              <div class="select-value" data-selecct-value data-en="Select category" data-zh="选择类别">Select category</div>
 
               <div class="select-icon">
                 <ion-icon name="chevron-down"></ion-icon>
@@ -961,7 +967,7 @@
       <article class="blog" data-page="blog">
 
         <header>
-          <h2 class="h2 article-title">Blog</h2>
+          <h2 class="h2 article-title" data-en="Blog" data-zh="博客">Blog</h2>
         </header>
 
         <section class="blog-posts">
@@ -978,16 +984,16 @@
                 <div class="blog-content">
 
                   <div class="blog-meta">
-                    <p class="blog-category">Film</p>
+                    <p class="blog-category" data-en="Film" data-zh="电影">Film</p>
 
                     <span class="dot"></span>
 
                     <time datetime="2025-10-19">Oct 19, 2025</time>
                   </div>
 
-                  <h3 class="h3 blog-item-title">One person; Many faces</h3>
+                  <h3 class="h3 blog-item-title" data-en="One person; Many faces" data-zh="一人；千面">One person; Many faces</h3>
 
-                  <p class="blog-text">
+                  <p class="blog-text" data-en="Actor / Actress worked with Quentin Tarentino has always been assigned with different characters, sometimes with distinctive personalities. What is the magic behind that?" data-zh="与昆汀·塔伦蒂诺合作的演员总是被赋予不同的角色，有时具有鲜明的个性。这背后的魔力是什么？">
                     Actor / Actress worked with Quentin Tarentino has always been assigned with different characters, sometimes with distinctive personalities.
                     What is the magic behind that?
                   </p>
@@ -1005,16 +1011,16 @@
                 <div class="blog-content">
 
                   <div class="blog-meta">
-                    <p class="blog-category">Photography</p>
+                    <p class="blog-category" data-en="Photography" data-zh="摄影">Photography</p>
 
                     <span class="dot"></span>
 
                     <time datetime="2025-10-23">Oct 23, 2025</time>
                   </div>
 
-                  <h3 class="h3 blog-item-title">Photograph Gallery</h3>
+                  <h3 class="h3 blog-item-title" data-en="Photograph Gallery" data-zh="摄影画廊">Photograph Gallery</h3>
 
-                  <p class="blog-text">
+                  <p class="blog-text" data-en="I love taking photographs. Part of the reasons is to record where I've been to, and what I have experienced during the journey. Good photographs can literally bring me back to that specific moment." data-zh="我喜欢拍照。部分原因是为了记录我去过的地方，以及旅途中的经历。好的照片可以真正地把我带回到那个特定的时刻。">
                     I love taking photographs. Part of the reasons is to record where I've been to, and 
                     what I have experienced during the journey. Good photographs can literally bring me back to that specific moment.
                   </p>
@@ -1045,7 +1051,7 @@
       <article class="contact" data-page="contact">
 
         <header>
-          <h2 class="h2 article-title">Contact</h2>
+          <h2 class="h2 article-title" data-en="Contact" data-zh="联系我">Contact</h2>
         </header>
 
         <section class="mapbox" data-mapbox>
@@ -1058,7 +1064,7 @@
 
         <section class="contact-form">
 
-          <h3 class="h3 form-title">Contact Form</h3>
+          <h3 class="h3 form-title" data-en="Contact Form" data-zh="联系表单">Contact Form</h3>
 
           <form id="contact-form" class="form" data-form
             data-emailjs-public-key="l8DiZ1pCPpBHzUNCS"
