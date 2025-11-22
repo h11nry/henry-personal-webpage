@@ -19,11 +19,16 @@ document.addEventListener('DOMContentLoaded', function() {
             const zhText = element.getAttribute('data-zh');
             
             if (lang === 'zh' && zhText) {
-                element.textContent = zhText;
+                element.innerHTML = zhText;
             } else if (lang === 'en' && enText) {
-                element.textContent = enText;
+                element.innerHTML = enText;
             }
         });
+        
+        // Re-render MathJax if present
+        if (window.MathJax && window.MathJax.typeset) {
+            window.MathJax.typeset();
+        }
         
         // Update language switch button state
         if (lang === 'zh') {

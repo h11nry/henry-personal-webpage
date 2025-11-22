@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeNet-5 & AlexNet: Principles and Practice - Henry's Blog</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- MathJax for formulas -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #1e1e1f;
+            color: #d6d6d6;
+            font-family: 'DM Sans', 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            font-size: 16px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #2b2b2c;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        
+        .blog-header {
+            position: relative;
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #333334;
+            border-radius: 8px;
+        }
+
+        .lang-switch {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 0;
+            padding: 8px 12px;
+            color: #ffffff;
+            font-size: 0.9em;
+            font-weight: 400;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            transition: color 0.3s ease;
+        }
+        
+        .lang-switch:hover {
+            color: #ffdb70;
+        }
+        
+        .lang-en.active,
+        .lang-zh.active {
+            color: #ffdb70;
+            font-weight: 600;
+        }
+        
+        .lang-separator {
+            margin: 0 4px;
+            opacity: 0.5;
+        }
+        
+        .blog-header h1 {
+            color: #ffdb70;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-family: 'Space Grotesk', 'Arial Black', sans-serif;
+            font-weight: 600;
+        }
+        
+        .back-link {
+            color: #ffdb70;
+            text-decoration: none;
+            font-size: 0.9em;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        .article-title {
+            color: #ffffff;
+            font-size: 2.8em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            line-height: 1.1;
+            font-family: 'Space Grotesk', 'Arial Black', sans-serif;
+            letter-spacing: -0.8px;
+        }
+        
+        .blog-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            color: #888;
+        }
+        
+        .blog-category {
+            background: #ffdb70;
+            color: #1e1e1f;
+            padding: 6px 14px;
+            border-radius: 25px;
+            font-size: 0.8em;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .dot {
+            width: 4px;
+            height: 4px;
+            background: #888;
+            border-radius: 50%;
+        }
+        
+        .featured-image {
+            width: 100%;
+            max-width: 100%;
+            height: 450px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s ease;
+            background-color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+            font-size: 2em;
+        }
+        
+        .featured-image:hover {
+            transform: scale(1.02);
+        }
+        
+        .content {
+            font-size: 1.05em;
+            line-height: 1.7;
+        }
+        
+        .content p {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        .content h3 {
+            color: #ffffff;
+            font-size: 1.9em;
+            margin: 35px 0 18px;
+            border-bottom: 3px solid #ffdb70;
+            padding-bottom: 8px;
+            font-family: 'Space Grotesk', 'Arial Black', sans-serif;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+        
+        .content h4 {
+            color: #ffdb70;
+            font-size: 1.25em;
+            margin: 25px 0 12px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+        }
+        
+        .content ul {
+            margin: 15px 0 15px 25px;
+        }
+        
+        .content li {
+            margin-bottom: 8px;
+        }
+        
+        .special-box {
+            background: #383838;
+            border: 1px solid #555;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+        
+        .character-box {
+            background: linear-gradient(135deg, #383838, #444);
+            border-left: 4px solid #ffdb70;
+        }
+        
+        .quote-box {
+            background: #333;
+            border-left: 4px solid #ffdb70;
+            padding: 22px;
+            margin: 25px 0;
+            border-radius: 0 12px 12px 0;
+            font-style: italic;
+            font-size: 1.08em;
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.6;
+        }
+        
+        .conclusion {
+            background: linear-gradient(135deg, #444, #556);
+            border: 2px solid #ffdb70;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .conclusion h4 {
+            color: #ffdb70;
+            margin-bottom: 15px;
+        }
+        
+        strong {
+            color: #ffffff;
+            font-weight: bold;
+        }
+        
+        em {
+            color: #ffdb70;
+            font-style: italic;
+        }
+        
+        .image-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .double-image-container {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+            justify-content: center;
+        }
+        
+        .double-image-container > div {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .double-image-placeholder {
+            width: 100%;
+            height: 250px;
+            background: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            color: #aaa;
+            font-size: 0.8em;
+            border: 1px dashed #555;
+            margin-bottom: 8px;
+        }
+        
+        .content .image-caption {
+            text-align: center;
+            font-size: 0.82em;
+            color: #aaa;
+            margin-top: 8px;
+            font-style: italic;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 400;
+        }
+
+        code {
+            background: #444;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: monospace;
+            color: #ffdb70;
+        }
+    </style>
+    
+    <!-- Language Switch Script -->
+    <script src="../js/blog-lang-switch.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <header class="blog-header">
+            <button class="lang-switch" id="langSwitch">
+                <span class="lang-en">EN</span>
+                <span class="lang-separator">/</span>
+                <span class="lang-zh">中文</span>
+            </button>
+            <h1 data-en="Henry's Blog" data-zh="Henry 的博客">Henry's Blog</h1>
+            <a href="../../index.html#blog" class="back-link" data-en="← Back to Blog" data-zh="← 返回博客">← Back to Blog</a>
+        </header>
+
+        <article>
+            <h1 class="article-title" data-en="Learning Record: Principles of CNN Algorithms and LeNet-5 & AlexNet" data-zh="学习记录：CNN算法原理和LeNet-5与AlexNet算法">LeNet-5 & AlexNet: Principles and Practice</h1>
+            
+            <div class="blog-meta">
+                <span class="blog-category" data-en="Deep Learning" data-zh="深度学习">Deep Learning</span>
+                <span class="dot"></span>
+                <time datetime="2025-11-22">November 22, 2025</time>
+            </div>
+
+            <!-- Featured Image -->
+            <div class="featured-image" style="height: 300px; background: #222; padding: 0; overflow: hidden;">
+                <img src="../images/CNN-basic-and-LeNet-AlexNet/CNN.jpg" alt="CNN Architecture" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+
+            <div class="content">
+                <p data-en="Convolutional Neural Networks (CNNs) are among the most influential models in deep learning, achieving massive success particularly in computer vision tasks. This post dives deep into two milestone CNN architectures: <strong>LeNet-5</strong> and <strong>AlexNet</strong>. We will analyze their structures, key concepts, and formulas, summarizing their contributions to the field." data-zh="卷积神经网络（Convolutional Neural Networks, CNN）是深度学习领域中最具影响力的模型之一，特别是在计算机视觉任务中取得了巨大的成功。本文将深入探讨两个里程碑式的CNN架构：<strong>LeNet-5</strong> 和 <strong>AlexNet</strong>。我们将详细解析它们的网络结构、核心概念以及关键公式，并总结它们对深度学习发展的贡献。">
+                    Convolutional Neural Networks (CNNs) are among the most influential models in deep learning, achieving massive success particularly in computer vision tasks. This post dives deep into two milestone CNN architectures: <strong>LeNet-5</strong> and <strong>AlexNet</strong>. We will analyze their structures, key concepts, and formulas, summarizing their contributions to the field.
+                </p>
+
+                <h3 data-en="1. Principles of CNN Algorithms" data-zh="1. 卷积神经网络算法原理">1. Principles of CNN Algorithms</h3>
+
+                <p data-en="Before diving into specific architectures, we need to understand the core building blocks of CNNs. Unlike traditional fully connected networks that flatten images into 1D vectors (losing spatial information), CNNs preserve the 2D structure. They leverage <strong>local connectivity</strong> and <strong>weight sharing</strong> to drastically reduce the number of parameters and efficiently extract spatial hierarchies of features." data-zh="在深入了解具体的网络架构之前，我们需要先理解卷积神经网络的核心构建模块。与将图像展平为一维向量（从而丢失空间信息）的传统全连接网络不同，CNN 保留了图像的二维结构。它利用<strong>局部连接</strong>和<strong>权值共享</strong>机制，大幅减少了参数数量，并能高效地提取具有空间层级结构的特征。">
+                    Before diving into specific architectures, we need to understand the core building blocks of CNNs. Unlike traditional fully connected networks that flatten images into 1D vectors (losing spatial information), CNNs preserve the 2D structure. They leverage <strong>local connectivity</strong> and <strong>weight sharing</strong> to drastically reduce the number of parameters and efficiently extract spatial hierarchies of features.
+                </p>
+
+                <h4 data-en="1.1 Convolutional Layer" data-zh="1.1 卷积层 (Convolutional Layer)">1.1 Convolutional Layer</h4>
+                <p data-en="The core of a CNN, used to extract features. It slides a learnable filter (kernel) over the input image to perform dot product operations." data-zh="卷积层是 CNN 的核心，用于提取图像的特征。它通过一个可学习的滤波器（Filter 或 Kernel）在输入图像上滑动，进行点积运算。">
+                    The core of a CNN, used to extract features. It slides a learnable filter (kernel) over the input image to perform dot product operations.
+                </p>
+                <ul>
+                    <li data-en="<strong>Local Receptive Field:</strong> Each neuron connects only to a local region of the input, mimicking the biological visual system." data-zh="<strong>局部感受野 (Local Receptive Field)：</strong> 每个神经元只连接输入数据的一个局部区域，这模拟了生物视觉系统。"><strong>Local Receptive Field:</strong> Each neuron connects only to a local region of the input, mimicking the biological visual system.</li>
+                    <li data-en="<strong>Weight Sharing:</strong> The same kernel parameters are used across all positions of the image, drastically reducing parameter count and providing translation invariance." data-zh="<strong>权值共享 (Weight Sharing)：</strong> 同一个卷积核在图像的所有位置使用相同的参数，这大大减少了模型参数量，并赋予了网络平移不变性。"><strong>Weight Sharing:</strong> The same kernel parameters are used across all positions of the image, drastically reducing parameter count and providing translation invariance.</li>
+                </ul>
+                
+                <p data-en="<strong>Output Size Formula:</strong><br>Given input size $W \times W$, filter size $F \times F$, padding $P$, and stride $S$, the output size $N$ is: $$ N = \frac{W - F + 2P}{S} + 1 $$" data-zh="<strong>输出特征图尺寸计算公式：</strong><br>假设输入大小为 $W \times W$，卷积核大小为 $F \times F$，填充（Padding）为 $P$，步长（Stride）为 $S$，则输出大小 $N$ 为：$$ N = \frac{W - F + 2P}{S} + 1 $$">
+                    <strong>Output Size Formula:</strong><br>Given input size $W \times W$, filter size $F \times F$, padding $P$, and stride $S$, the output size $N$ is: $$ N = \frac{W - F + 2P}{S} + 1 $$
+                </p>
+
+                <p data-en="<strong>Padding & Stride:</strong><br><strong>Padding</strong> adds pixels (usually zeros) around the border to control output size (e.g., 'Same' padding keeps dimensions). <strong>Stride</strong> determines the step size of the filter; a stride > 1 performs downsampling." data-zh="<strong>填充 (Padding) 与 步长 (Stride)：</strong><br><strong>填充</strong>在图像边界周围添加像素（通常是0）以控制输出尺寸（例如 'Same' 填充保持尺寸不变）。<strong>步长</strong>决定了滤波器的移动步幅；步长大于 1 时会进行下采样。">
+                    <strong>Padding & Stride:</strong><br><strong>Padding</strong> adds pixels (usually zeros) around the border to control output size (e.g., 'Same' padding keeps dimensions). <strong>Stride</strong> determines the step size of the filter; a stride > 1 performs downsampling.
+                </p>
+
+                <h4 data-en="1.2 Pooling Layer" data-zh="1.2 池化层 (Pooling Layer)">1.2 Pooling Layer</h4>
+                <p data-en="Usually follows convolutional layers to reduce spatial dimensions (downsampling), reducing computation and controlling overfitting." data-zh="池化层通常紧跟在卷积层之后，用于降低特征图的空间维度（下采样），从而减少计算量并控制过拟合。">
+                    Usually follows convolutional layers to reduce spatial dimensions (downsampling), reducing computation and controlling overfitting.
+                </p>
+                <ul>
+                    <li data-en="<strong>Max Pooling:</strong> Takes the maximum value in the window. Captures the most prominent features (like edges)." data-zh="<strong>最大池化 (Max Pooling)：</strong> 取窗口内的最大值，保留最显著的特征（如边缘）。"><strong>Max Pooling:</strong> Takes the maximum value in the window. Captures the most prominent features (like edges).</li>
+                    <li data-en="<strong>Average Pooling:</strong> Takes the average value. Retains background information." data-zh="<strong>平均池化 (Average Pooling)：</strong> 取窗口内的平均值，保留背景信息。"><strong>Average Pooling:</strong> Takes the average value. Retains background information.</li>
+                </ul>
+
+                <h4 data-en="1.3 Activation Function" data-zh="1.3 激活函数 (Activation Function)">1.3 Activation Function</h4>
+                <p data-en="Introduces non-linearity, allowing the network to fit complex functions. Here are the most common ones:" data-zh="激活函数引入非线性因素，使神经网络能够拟合复杂的函数。以下是几种最常见的激活函数：">
+                    Introduces non-linearity, allowing the network to fit complex functions. Here are the most common ones:
+                </p>
+
+                <!-- Sigmoid -->
+                <div class="special-box">
+                    <h5 style="color: #ffdb70; margin-bottom: 10px;">Sigmoid</h5>
+                    <p data-en="<strong>Formula:</strong> $\sigma(x) = \frac{1}{1 + e^{-x}}$" data-zh="<strong>公式：</strong> $\sigma(x) = \frac{1}{1 + e^{-x}}$"><strong>Formula:</strong> $\sigma(x) = \frac{1}{1 + e^{-x}}$</p>
+                    <p data-en="<strong>Derivative:</strong> $\sigma'(x) = \sigma(x)(1 - \sigma(x))$" data-zh="<strong>导数：</strong> $\sigma'(x) = \sigma(x)(1 - \sigma(x))$"><strong>Derivative:</strong> $\sigma'(x) = \sigma(x)(1 - \sigma(x))$</p>
+                    
+                    <div class="double-image-container">
+                        <div>
+                            <div class="double-image-placeholder" style="background: transparent; border: none; padding: 0;">
+                                <img src="../images/CNN-basic-and-LeNet-AlexNet/Sigmoid_self.jpg" alt="Sigmoid Function" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;">
+                            </div>
+                            <p class="image-caption" data-en="Function" data-zh="函数图像">Function</p>
+                        </div>
+                        <div>
+                            <div class="double-image-placeholder" style="background: transparent; border: none; padding: 0;">
+                                <img src="../images/CNN-basic-and-LeNet-AlexNet/Sigmoid_derive.jpg" alt="Sigmoid Derivative" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;">
+                            </div>
+                            <p class="image-caption" data-en="Derivative" data-zh="导数图像">Derivative</p>
+                        </div>
+                    </div>
+
+                    <ul>
+                        <li data-en="<strong>Pros:</strong> Smooth gradient, output between (0, 1), good for probability." data-zh="<strong>优点：</strong> 梯度平滑，输出在 (0, 1) 之间，适合概率输出。"><strong>Pros:</strong> Smooth gradient, output between (0, 1), good for probability.</li>
+                        <li data-en="<strong>Cons:</strong> <strong>Vanishing Gradient:</strong> Derivative is near 0 for large/small inputs. <strong>Not Zero-Centered:</strong> Output is always positive. <strong>Expensive:</strong> Exponential calculation." data-zh="<strong>缺点：</strong> <strong>梯度消失：</strong> 输入很大或很小时导数趋近于 0。<strong>非零中心化：</strong> 输出恒为正。<strong>计算昂贵：</strong> 包含指数运算。"><strong>Cons:</strong> <strong>Vanishing Gradient:</strong> Derivative is near 0 for large/small inputs. <strong>Not Zero-Centered:</strong> Output is always positive. <strong>Expensive:</strong> Exponential calculation.</li>
+                    </ul>
+                </div>
+
+                <!-- Tanh -->
+                <div class="special-box">
+                    <h5 style="color: #ffdb70; margin-bottom: 10px;">Tanh (Hyperbolic Tangent)</h5>
+                    <p data-en="<strong>Formula:</strong> $\tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}$" data-zh="<strong>公式：</strong> $\tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}$"><strong>Formula:</strong> $\tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}$</p>
+                    <p data-en="<strong>Derivative:</strong> $\tanh'(x) = 1 - \tanh^2(x)$" data-zh="<strong>导数：</strong> $\tanh'(x) = 1 - \tanh^2(x)$"><strong>Derivative:</strong> $\tanh'(x) = 1 - \tanh^2(x)$</p>
+
+                    <div class="double-image-container">
+                        <div>
+                            <div class="double-image-placeholder" style="background: transparent; border: none; padding: 0;">
+                                <img src="../images/CNN-basic-and-LeNet-AlexNet/Tanh_self.jpg" alt="Tanh Function" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;">
+                            </div>
+                            <p class="image-caption" data-en="Function" data-zh="函数图像">Function</p>
+                        </div>
+                        <div>
+                            <div class="double-image-placeholder" style="background: transparent; border: none; padding: 0;">
+                                <img src="../images/CNN-basic-and-LeNet-AlexNet/Tanh_derive.jpg" alt="Tanh Derivative" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;">
+                            </div>
+                            <p class="image-caption" data-en="Derivative" data-zh="导数图像">Derivative</p>
+                        </div>
+                    </div>
+
+                    <ul>
+                        <li data-en="<strong>Pros:</strong> <strong>Zero-Centered:</strong> Output range (-1, 1), usually converges faster than Sigmoid." data-zh="<strong>优点：</strong> <strong>零中心化：</strong> 输出范围 (-1, 1)，通常比 Sigmoid 收敛更快。"><strong>Pros:</strong> <strong>Zero-Centered:</strong> Output range (-1, 1), usually converges faster than Sigmoid.</li>
+                        <li data-en="<strong>Cons:</strong> Still suffers from <strong>Vanishing Gradient</strong> problem." data-zh="<strong>缺点：</strong> 仍然存在<strong>梯度消失</strong>问题。"><strong>Cons:</strong> Still suffers from <strong>Vanishing Gradient</strong> problem.</li>
+                    </ul>
+                </div>
+
+                <!-- ReLU -->
+                <div class="special-box">
+                    <h5 style="color: #ffdb70; margin-bottom: 10px;">ReLU (Rectified Linear Unit)</h5>
+                    <p data-en="<strong>Formula:</strong> $f(x) = \max(0, x)$" data-zh="<strong>公式：</strong> $f(x) = \max(0, x)$"><strong>Formula:</strong> $f(x) = \max(0, x)$</p>
+                    <p data-en="<strong>Derivative:</strong> $f'(x) = \begin{cases} 1 & x > 0 \\ 0 & x < 0 \end{cases}$" data-zh="<strong>导数：</strong> $f'(x) = \begin{cases} 1 & x > 0 \\ 0 & x < 0 \end{cases}$"><strong>Derivative:</strong> $f'(x) = \begin{cases} 1 & x > 0 \\ 0 & x < 0 \end{cases}$</p>
+
+                    <div class="double-image-container">
+                        <div>
+                            <div class="double-image-placeholder" style="background: transparent; border: none; padding: 0;">
+                                <img src="../images/CNN-basic-and-LeNet-AlexNet/ReLU_self.jpg" alt="ReLU Function" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;">
+                            </div>
+                            <p class="image-caption" data-en="Function" data-zh="函数图像">Function</p>
+                        </div>
+                        <div>
+                            <div class="double-image-placeholder" style="background: transparent; border: none; padding: 0;">
+                                <img src="../images/CNN-basic-and-LeNet-AlexNet/ReLU_derive.jpg" alt="ReLU Derivative" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;">
+                            </div>
+                            <p class="image-caption" data-en="Derivative" data-zh="导数图像">Derivative</p>
+                        </div>
+                    </div>
+
+                    <ul>
+                        <li data-en="<strong>Pros:</strong> <strong>Efficient:</strong> Simple calculation. <strong>No Vanishing Gradient</strong> (in positive region). Accelerates convergence." data-zh="<strong>优点：</strong> <strong>计算高效：</strong> 简单计算。<strong>无梯度消失</strong>（在正区间）。加速收敛。"><strong>Pros:</strong> <strong>Efficient:</strong> Simple calculation. <strong>No Vanishing Gradient</strong> (in positive region). Accelerates convergence.</li>
+                        <li data-en="<strong>Cons:</strong> <strong>Dead ReLU:</strong> Neurons can 'die' if they get stuck in the negative region (gradient is 0), never updating again." data-zh="<strong>缺点：</strong> <strong>神经元死亡 (Dead ReLU)：</strong> 如果神经元陷入负区间（梯度为 0），它可能永远无法更新，导致“死亡”。"><strong>Cons:</strong> <strong>Dead ReLU:</strong> Neurons can 'die' if they get stuck in the negative region (gradient is 0), never updating again.</li>
+                    </ul>
+                </div>
+
+                <!-- Leaky ReLU -->
+                <div class="special-box">
+                    <h5 style="color: #ffdb70; margin-bottom: 10px;">Leaky ReLU</h5>
+                    <p data-en="<strong>Formula:</strong> $f(x) = \max(\alpha x, x)$ ($\alpha \approx 0.01$)" data-zh="<strong>公式：</strong> $f(x) = \max(\alpha x, x)$ ($\alpha \approx 0.01$)"><strong>Formula:</strong> $f(x) = \max(\alpha x, x)$ ($\alpha \approx 0.01$)</p>
+                    <p data-en="<strong>Derivative:</strong> $f'(x) = \begin{cases} 1 & x > 0 \\ \alpha & x < 0 \end{cases}$" data-zh="<strong>导数：</strong> $f'(x) = \begin{cases} 1 & x > 0 \\ \alpha & x < 0 \end{cases}$"><strong>Derivative:</strong> $f'(x) = \begin{cases} 1 & x > 0 \\ \alpha & x < 0 \end{cases}$</p>
+
+                    <div class="double-image-container">
+                        <div>
+                            <div class="double-image-placeholder" style="background: transparent; border: none; padding: 0;">
+                                <img src="../images/CNN-basic-and-LeNet-AlexNet/Leaky_ReLU_self.jpg" alt="Leaky ReLU Function" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;">
+                            </div>
+                            <p class="image-caption" data-en="Function" data-zh="函数图像">Function</p>
+                        </div>
+                        <div>
+                            <div class="double-image-placeholder" style="background: transparent; border: none; padding: 0;">
+                                <img src="../images/CNN-basic-and-LeNet-AlexNet/Leaky_ReLU_derive.jpg" alt="Leaky ReLU Derivative" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px;">
+                            </div>
+                            <p class="image-caption" data-en="Derivative" data-zh="导数图像">Derivative</p>
+                        </div>
+                    </div>
+
+                    <ul>
+                        <li data-en="<strong>Pros:</strong> Solves the <strong>Dead ReLU</strong> problem by allowing a small gradient for negative inputs." data-zh="<strong>优点：</strong> 通过允许负区间有微小梯度，解决了 <strong>Dead ReLU</strong> 问题。"><strong>Pros:</strong> Solves the <strong>Dead ReLU</strong> problem by allowing a small gradient for negative inputs.</li>
+                        <li data-en="<strong>Cons:</strong> <strong>Inconsistent Predictions:</strong> The relationship for negative inputs is different from positive ones, which might affect learning complex patterns." data-zh="<strong>缺点：</strong> <strong>预测不一致性：</strong> 负区间的线性关系与正区间不同，这在某些情况下可能影响对复杂模式的学习。"><strong>Cons:</strong> <strong>Inconsistent Predictions:</strong> The relationship for negative inputs is different from positive ones, which might affect learning complex patterns.</li>
+                    </ul>
+                </div>
+
+                <h4 data-en="1.4 Forward & Backward Propagation" data-zh="1.4 前向传播与反向传播">1.4 Forward & Backward Propagation</h4>
+
+                <p data-en="<strong>Forward Propagation:</strong> Data flows from input to output. For a convolutional layer $l$, the output feature map $x_j^l$ is calculated by convolving input maps with kernels and adding bias:" data-zh="<strong>前向传播 (Forward Propagation)：</strong> 数据从输入流向输出。对于卷积层 $l$，输出特征图 $x_j^l$ 是通过输入特征图与卷积核进行卷积并加上偏置计算得到的：">
+                    <strong>Forward Propagation:</strong> Data flows from input to output. For a convolutional layer $l$, the output feature map $x_j^l$ is calculated by convolving input maps with kernels and adding bias:
+                </p>
+                <p>
+                    $$ x_j^l = f(u_j^l) = f\left(\sum_{i \in M_j} x_i^{l-1} * k_{ij}^l + b_j^l\right) $$
+                </p>
+                <p data-en="Where $M_j$ is the set of input maps, $k_{ij}$ is the kernel, and $f(\cdot)$ is the activation function." data-zh="其中 $M_j$ 是输入特征图的集合，$k_{ij}$ 是卷积核，$f(\cdot)$ 是激活函数。">
+                    Where $M_j$ is the set of input maps, $k_{ij}$ is the kernel, and $f(\cdot)$ is the activation function.
+                </p>
+
+                <p data-en="<strong>Loss Function:</strong> To train the network, we minimize a loss function $E$. A classic example (often used in regression or early CNNs) is the <strong>Mean Squared Error (MSE)</strong>:" data-zh="<strong>损失函数 (Loss Function)：</strong> 为了训练网络，我们需要最小化损失函数 $E$。一个经典的例子（常用于回归或早期 CNN）是<strong>均方误差 (MSE)</strong>：">
+                    <strong>Loss Function:</strong> To train the network, we minimize a loss function $E$. A classic example (often used in regression or early CNNs) is the <strong>Mean Squared Error (MSE)</strong>:
+                </p>
+                <p>
+                    $$ E = \frac{1}{2} \sum_{n=1}^{N} (t_n - y_n)^2 $$
+                </p>
+                <p data-en="Example: If the target $t=1.0$ and prediction $y=0.8$, the loss is $0.5 \times (1.0 - 0.8)^2 = 0.02$." data-zh="例如：如果目标值 $t=1.0$，预测值 $y=0.8$，则损失为 $0.5 \times (1.0 - 0.8)^2 = 0.02$。">
+                    Example: If the target $t=1.0$ and prediction $y=0.8$, the loss is $0.5 \times (1.0 - 0.8)^2 = 0.02$.
+                </p>
+
+                <p data-en="<strong>Backpropagation:</strong> We calculate gradients of $E$ w.r.t weights $W$ and bias $b$ using the <strong>Chain Rule</strong>. This involves computing the 'sensitivity' $\delta$ (delta) for each layer backwards." data-zh="<strong>反向传播 (Backpropagation)：</strong> 我们利用<strong>链式法则</strong>计算损失 $E$ 关于权重 $W$ 和偏置 $b$ 的梯度。这涉及向后计算每一层的“灵敏度” $\delta$ (delta)。">
+                    <strong>Backpropagation:</strong> We calculate gradients of $E$ w.r.t weights $W$ and bias $b$ using the <strong>Chain Rule</strong>. This involves computing the 'sensitivity' $\delta$ (delta) for each layer backwards.
+                </p>
+                <ul>
+                    <li data-en="<strong>Sensitivity Propagation:</strong> For a conv layer, error is propagated by convolving the next layer's sensitivity with rotated filters: $\delta^l = \delta^{l+1} * \text{rot180}(W^{l+1}) \circ f'(u^l)$." data-zh="<strong>灵敏度传播：</strong> 对于卷积层，误差通过将下一层的灵敏度与旋转后的滤波器进行卷积来传播：$\delta^l = \delta^{l+1} * \text{rot180}(W^{l+1}) \circ f'(u^l)$。"><strong>Sensitivity Propagation:</strong> For a conv layer, error is propagated by convolving the next layer's sensitivity with rotated filters: $\delta^l = \delta^{l+1} * \text{rot180}(W^{l+1}) \circ f'(u^l)$.</li>
+                    <li data-en="<strong>Weight Update:</strong> $W_{new} = W_{old} - \eta \frac{\partial E}{\partial W}$." data-zh="<strong>权重更新：</strong> $W_{new} = W_{old} - \eta \frac{\partial E}{\partial W}$。"><strong>Weight Update:</strong> $W_{new} = W_{old} - \eta \frac{\partial E}{\partial W}$.</li>
+                </ul>
+
+                <h3 data-en="2. LeNet-5: The Pioneer" data-zh="2. LeNet-5：卷积神经网络的开山之作">2. LeNet-5: The Pioneer</h3>
+
+                <p data-en="Proposed by Yann LeCun et al. in 1998 for handwritten digit recognition (MNIST). It established the modern CNN foundation: <strong>Convolution -> Pooling -> Fully Connected</strong>." data-zh="LeNet-5 由 Yann LeCun 等人在 1998 年提出，主要用于手写数字识别（MNIST数据集）。它是最早的卷积神经网络之一，奠定了现代 CNN 的基础架构：<strong>卷积层（Convolution）、池化层（Pooling）和全连接层（Fully Connected）</strong>的组合。">
+                    Proposed by Yann LeCun et al. in 1998 for handwritten digit recognition (MNIST). It established the modern CNN foundation: <strong>Convolution -> Pooling -> Fully Connected</strong>.
+                </p>
+
+                <h4 data-en="2.1 Architecture Details" data-zh="2.1 网络架构详解">2.1 Architecture Details</h4>
+                
+                <p data-en="Input is a 32x32 grayscale image. The network has 7 layers (excluding input):" data-zh="LeNet-5 的输入是 32x32 的灰度图像。网络包含 7 层（不计输入层）：">
+                    Input is a 32x32 grayscale image. The network has 7 layers (excluding input):
+                </p>
+
+                <div class="special-box character-box">
+                    <ul>
+                        <li data-en="<strong>C1 Convolution:</strong> 6 filters of 5x5, stride 1. Output: $28 \times 28 \times 6$. Params: $(5 \times 5 + 1) \times 6 = 156$." data-zh="<strong>C1 卷积层：</strong> 使用 6 个 5x5 的卷积核，步长为 1。输出特征图大小为 $28 \times 28 \times 6$。参数量：$(5 \times 5 + 1) \times 6 = 156$。"><strong>C1 Convolution:</strong> 6 filters of 5x5, stride 1. Output: $28 \times 28 \times 6$. Params: $(5 \times 5 + 1) \times 6 = 156$.</li>
+                        <li data-en="<strong>S2 Pooling:</strong> 2x2 Average Pooling, stride 2. Output: $14 \times 14 \times 6$. Contains trainable coefficients." data-zh="<strong>S2 池化层（下采样）：</strong> 使用 2x2 的平均池化，步长为 2。输出特征图大小为 $14 \times 14 \times 6$。这一层包含可训练的系数和偏置。"><strong>S2 Pooling:</strong> 2x2 Average Pooling, stride 2. Output: $14 \times 14 \times 6$. Contains trainable coefficients.</li>
+                        <li data-en="<strong>C3 Convolution:</strong> 16 filters of 5x5. Output: $10 \times 10 \times 16$. <em>Note: This layer uses a specific 'connection table'. Not every filter in C3 connects to every feature map in S2. This asymmetry forces different filters to extract different (complementary) features and reduces computation.</em>" data-zh="<strong>C3 卷积层：</strong> 使用 16 个 5x5 的卷积核。输出特征图大小为 $10 \times 10 \times 16$。<em>注意：该层使用了特定的“连接表”。C3 中的并非每个滤波器都与 S2 中的所有特征图相连。这种不对称性强制不同的滤波器提取不同（互补）的特征，同时也减少了计算量。</em>"><strong>C3 Convolution:</strong> 16 filters of 5x5. Output: $10 \times 10 \times 16$. <em>Note: This layer uses a specific 'connection table'. Not every filter in C3 connects to every feature map in S2. This asymmetry forces different filters to extract different (complementary) features and reduces computation.</em></li>
+                        <li data-en="<strong>S4 Pooling:</strong> 2x2 Average Pooling, stride 2. Output: $5 \times 5 \times 16$." data-zh="<strong>S4 池化层：</strong> 2x2 平均池化，步长 2。输出特征图大小为 $5 \times 5 \times 16$。"><strong>S4 Pooling:</strong> 2x2 Average Pooling, stride 2. Output: $5 \times 5 \times 16$.</li>
+                        <li data-en="<strong>C5 Convolution:</strong> 120 filters of 5x5. Since input is 5x5, this acts as a fully connected layer. Output: $1 \times 1 \times 120$." data-zh="<strong>C5 卷积层：</strong> 使用 120 个 5x5 的卷积核。由于输入大小为 5x5，这一层实际上是全连接层。输出为 $1 \times 1 \times 120$。"><strong>C5 Convolution:</strong> 120 filters of 5x5. Since input is 5x5, this acts as a fully connected layer. Output: $1 \times 1 \times 120$.</li>
+                        <li data-en="<strong>F6 Fully Connected:</strong> 84 neurons. Activation usually Tanh or Sigmoid." data-zh="<strong>F6 全连接层：</strong> 84 个神经元。激活函数通常使用 Tanh 或 Sigmoid。"><strong>F6 Fully Connected:</strong> 84 neurons. Activation usually Tanh or Sigmoid.</li>
+                        <li data-en="<strong>Output:</strong> 10 neurons (digits 0-9), using RBF (Radial Basis Function)." data-zh="<strong>Output 输出层：</strong> 10 个神经元（对应数字 0-9），使用径向基函数（RBF）。"><strong>Output:</strong> 10 neurons (digits 0-9), using RBF (Radial Basis Function).</li>
+                    </ul>
+                </div>
+
+                <div class="image-container">
+                    <div style="width: 100%; height: auto; min-height: 200px; background: #222; display: flex; align-items: center; justify-content: center; border-radius: 8px; padding: 10px;">
+                        <img src="../images/CNN-basic-and-LeNet-AlexNet/LeNet_structure.jpeg" alt="LeNet-5 Architecture" style="width: 100%; height: auto; border-radius: 4px;">
+                    </div>
+                    <p class="image-caption" data-en="LeNet-5 Architecture" data-zh="LeNet-5 网络结构图">LeNet-5 Architecture</p>
+                </div>
+
+                <h3 data-en="3. AlexNet: The Deep Learning Explosion" data-zh="3. AlexNet：深度学习的爆发">3. AlexNet: The Deep Learning Explosion</h3>
+
+                <p data-en="In 2012, AlexNet by Alex Krizhevsky et al. won the ImageNet competition (ILSVRC) by a landslide, marking the start of the Deep Learning era. Compared to LeNet-5, AlexNet is deeper, wider, and introduced key modern technologies." data-zh="2012 年，Alex Krizhevsky 等人提出的 AlexNet 在 ImageNet 图像分类竞赛（ILSVRC）中以压倒性优势夺冠，标志着深度学习时代的正式到来。相比 LeNet-5，AlexNet 更深、更宽，并引入了多项关键技术。">
+                    In 2012, AlexNet by Alex Krizhevsky et al. won the ImageNet competition (ILSVRC) by a landslide, marking the start of the Deep Learning era. Compared to LeNet-5, AlexNet is deeper, wider, and introduced key modern technologies.
+                </p>
+
+                <h4 data-en="3.1 Architecture Features" data-zh="3.1 网络架构特点">3.1 Architecture Features</h4>
+                
+                <p data-en="Input is 224x224 (often cropped to 227x227) RGB images. It has 5 convolutional layers and 3 fully connected layers, with ~60 million parameters." data-zh="AlexNet 输入为 224x224（或 227x227）的 RGB 彩色图像，包含 5 个卷积层和 3 个全连接层，总参数量约为 6000 万。">
+                    Input is 224x224 (often cropped to 227x227) RGB images. It has 5 convolutional layers and 3 fully connected layers, with ~60 million parameters.
+                </p>
+
+                <div class="special-box character-box">
+                    <ul>
+                        <li data-en="<strong>C1:</strong> 96 filters of 11x11, stride 4. Drastically reduces feature map size." data-zh="<strong>C1：</strong> 96 个 11x11 卷积核，步长 4。大幅减小特征图尺寸。"><strong>C1:</strong> 96 filters of 11x11, stride 4. Drastically reduces feature map size.</li>
+                        <li data-en="<strong>C2:</strong> 256 filters of 5x5." data-zh="<strong>C2：</strong> 256 个 5x5 卷积核。"><strong>C2:</strong> 256 filters of 5x5.</li>
+                        <li data-en="<strong>C3, C4, C5:</strong> Consecutive conv layers with 384, 384, 256 filters of 3x3." data-zh="<strong>C3, C4, C5：</strong> 连续的卷积层，分别有 384, 384, 256 个 3x3 卷积核。"><strong>C3, C4, C5:</strong> Consecutive conv layers with 384, 384, 256 filters of 3x3.</li>
+                        <li data-en="<strong>FC6, FC7:</strong> Two fully connected layers with 4096 neurons each." data-zh="<strong>FC6, FC7：</strong> 两个 4096 神经元的全连接层。"><strong>FC6, FC7:</strong> Two fully connected layers with 4096 neurons each.</li>
+                        <li data-en="<strong>FC8:</strong> 1000 neurons (for ImageNet's 1000 classes), using Softmax." data-zh="<strong>FC8：</strong> 1000 个神经元（对应 ImageNet 的 1000 类），使用 Softmax 输出概率。"><strong>FC8:</strong> 1000 neurons (for ImageNet's 1000 classes), using Softmax.</li>
+                    </ul>
+                </div>
+
+                <div class="image-container">
+                    <div style="width: 100%; height: auto; min-height: 200px; background: #222; display: flex; align-items: center; justify-content: center; border-radius: 8px; padding: 10px;">
+                        <img src="../images/CNN-basic-and-LeNet-AlexNet/AlexNet_structure.png" alt="AlexNet Architecture" style="max-width: 100%; height: auto; border-radius: 4px;">
+                    </div>
+                    <p class="image-caption" data-en="AlexNet Architecture (Note the dual-GPU design in original paper)" data-zh="AlexNet 网络结构图（注意原始论文中的双 GPU 设计）">AlexNet Architecture (Note the dual-GPU design in original paper)</p>
+                </div>
+
+                <h4 data-en="3.2 Key Innovations" data-zh="3.2 关键创新点">3.2 Key Innovations</h4>
+
+                <ul>
+                    <li data-en="<strong>ReLU Activation:</strong> Replaced Sigmoid/Tanh. $f(x) = \max(0, x)$ solves the vanishing gradient problem in deep networks. It also induces <strong>sparsity</strong> (some neurons output 0), which improves computational efficiency and representation capability." data-zh="<strong>ReLU 激活函数：</strong> 替代了 Sigmoid/Tanh。$f(x) = \max(0, x)$ 解决了深层网络中的梯度消失问题。它还引入了<strong>稀疏性</strong>（部分神经元输出为 0），这提高了计算效率和特征表达能力。"><strong>ReLU Activation:</strong> Replaced Sigmoid/Tanh. $f(x) = \max(0, x)$ solves the vanishing gradient problem in deep networks. It also induces <strong>sparsity</strong> (some neurons output 0), which improves computational efficiency and representation capability.</li>
+                    <li data-en="<strong>Dropout:</strong> Randomly sets the output of neurons to zero (p=0.5) during training. This prevents complex co-adaptations on training data. It can be interpreted as training an ensemble of many different thinned networks, which greatly improves generalization." data-zh="<strong>Dropout：</strong> 在训练过程中随机将神经元的输出置为零（概率 p=0.5）。这防止了神经元对训练数据的过度协同适应。可以将其理解为训练了大量不同“稀疏”网络的集成（Ensemble），从而极大地提高了泛化能力。"><strong>Dropout:</strong> Randomly sets the output of neurons to zero (p=0.5) during training. This prevents complex co-adaptations on training data. It can be interpreted as training an ensemble of many different thinned networks, which greatly improves generalization.</li>
+                    <li data-en="<strong>Data Augmentation:</strong> Expanded dataset via image translations, horizontal reflections, and PCA color jittering to improve generalization." data-zh="<strong>数据增强 (Data Augmentation)：</strong> 通过图像平移、翻转、裁剪和颜色变换扩充数据集，提高模型泛化能力。"><strong>Data Augmentation:</strong> Expanded dataset via image translations, horizontal reflections, and PCA color jittering to improve generalization.</li>
+                    <li data-en="<strong>Overlapping Pooling:</strong> Pooling window size > stride (e.g., 3x3 window, stride 2), reducing information loss." data-zh="<strong>重叠池化 (Overlapping Pooling)：</strong> 池化窗口大小大于步长（如 3x3 窗口，步长 2），减少信息丢失。"><strong>Overlapping Pooling:</strong> Pooling window size > stride (e.g., 3x3 window, stride 2), reducing information loss.</li>
+                    <li data-en="<strong>LRN (Local Response Normalization):</strong> Mimics lateral inhibition in biology. (Note: Modern networks mostly use Batch Normalization instead)." data-zh="<strong>LRN (Local Response Normalization)：</strong> 局部响应归一化，模拟生物神经系统的侧抑制机制（现代网络中常用 Batch Normalization 替代）。"><strong>LRN (Local Response Normalization):</strong> Mimics lateral inhibition in biology. (Note: Modern networks mostly use Batch Normalization instead).</li>
+                    <li data-en="<strong>Multi-GPU Training:</strong> Used two GTX 580 GPUs to handle the model size, using group convolutions." data-zh="<strong>多 GPU 训练：</strong> 利用两块 GTX 580 GPU 并行训练，突破了当时的硬件显存限制。"><strong>Multi-GPU Training:</strong> Used two GTX 580 GPUs to handle the model size, using group convolutions.</li>
+                </ul>
+
+                <h3 data-en="4. Summary & Comparison" data-zh="4. 总结与对比">4. Summary & Comparison</h3>
+
+                <div class="conclusion">
+                    <h4 data-en="Evolution of Architecture" data-zh="架构演进">Evolution of Architecture</h4>
+                    <p data-en="From LeNet-5 to AlexNet, we witnessed the leap from 'shallow' to 'deep'. LeNet-5 proved CNNs work on simple tasks, while AlexNet demonstrated the power of Deep CNNs on large-scale complex datasets." data-zh="从 LeNet-5 到 AlexNet，我们见证了神经网络从“浅层”向“深层”的跨越。LeNet-5 证明了 CNN 在简单任务上的有效性，而 AlexNet 则展示了深度 CNN 在大规模复杂数据集上的强大能力。">
+                        From LeNet-5 to AlexNet, we witnessed the leap from 'shallow' to 'deep'. LeNet-5 proved CNNs work on simple tasks, while AlexNet demonstrated the power of Deep CNNs on large-scale complex datasets.
+                    </p>
+                    <p style="margin-top: 10px; font-size: 0.9em;" data-en="<strong>LeNet-5:</strong> Small images, simple features (digits).<br><strong>AlexNet:</strong> Large images, complex features (objects), introduced ReLU & Dropout." data-zh="<strong>LeNet-5:</strong> 适用于小图像、简单特征（数字）。<br><strong>AlexNet:</strong> 适用于大图像、复杂特征（物体），引入了 ReLU 和 Dropout 等现代深度学习标配技术。">
+                        <strong>LeNet-5:</strong> Small images, simple features (digits).<br>
+                        <strong>AlexNet:</strong> Large images, complex features (objects), introduced ReLU & Dropout.
+                    </p>
+                </div>
+
+                <div class="quote-box">
+                    <span data-en="AlexNet was not just a model victory; it was a victory of Big Data, High-Performance Computing (GPU), and Advanced Algorithms combined." data-zh="AlexNet 的出现不仅仅是一个模型的胜利，更是大数据、高性能计算（GPU）和先进算法结合的胜利。">"AlexNet was not just a model victory; it was a victory of Big Data, High-Performance Computing (GPU), and Advanced Algorithms combined."</span>
+                </div>
+
+            </div>
+        </article>
+    </div>
+</body>
+</html>
