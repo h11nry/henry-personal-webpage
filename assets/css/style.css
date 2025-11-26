@@ -2446,19 +2446,19 @@ footer p {
   position: fixed;
   top: 0;
   left: 0;
-  width: 24px;
-  height: 24px;
+  width: 45px;
+  height: 45px;
   pointer-events: none;
   z-index: 99999;
   transform: translate(-50%, -50%);
   transition: transform 0.1s ease;
 }
 
-/* 猫爪光标 - 使用SVG */
+/* 猫爪光标 */
 .cursor-paw {
   width: 100%;
   height: 100%;
-  background-image: url('../images/flip.svg');
+  background-image: url('../images/move_page_01.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -2466,7 +2466,7 @@ footer p {
   transition: transform 0.2s ease;
 }
 
-/* 点击时的猫脸动画 - 使用SVG */
+/* 点击时的猫脸动画 */
 .cursor-click {
   position: absolute;
   width: 40px;
@@ -2482,7 +2482,7 @@ footer p {
 .cursor-click .cat-svg {
   width: 100%;
   height: 100%;
-  background-image: url('../images/cat.svg');
+  background-image: url('../images/link_page_01.png');
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
