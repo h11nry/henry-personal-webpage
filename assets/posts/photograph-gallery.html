@@ -654,6 +654,35 @@
                 height: 250px;
             }
         }
+
+        /* Go Top Button styles */
+        .go-top-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #ffdb70;
+            color: #1e1e1f;
+            border: none;
+            border-radius: 25px;
+            padding: 10px 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: background 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .go-top-btn:hover {
+            background: #ffd700;
+        }
+        
+        .go-top-btn ion-icon {
+            font-size: 1.2em;
+        }
     </style>
     
     <!-- Language Switch Script -->
@@ -796,6 +825,18 @@
             <span id="current-image">1</span> / <span id="total-images">1</span>
         </div>
     </div>
+
+    <!-- Go Top Button -->
+    <button class="go-top-btn">
+        <ion-icon name="arrow-up-outline"></ion-icon>
+        <span data-en="GO TOP" data-zh="回到顶部">GO TOP</span>
+    </button>
+
+    <!--
+      - ionicon link
+    -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
     <script>
         // Global variables for lightbox functionality
@@ -975,6 +1016,9 @@
                 }
             }
         }
+
+        // Scroll to top functionality
+        // Handled by blog-lang-switch.js
     </script>
 </body>
 </html>

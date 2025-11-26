@@ -300,6 +300,35 @@
             font-family: monospace;
             color: #ffdb70;
         }
+
+        /* Go Top Button */
+        .go-top-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #ffdb70;
+            color: #1e1e1f;
+            border: none;
+            border-radius: 25px;
+            padding: 10px 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: background 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .go-top-btn:hover {
+            background: #ffd700;
+        }
+        
+        .go-top-btn ion-icon {
+            font-size: 1.2em;
+        }
     </style>
     
     <!-- Language Switch Script -->
@@ -333,6 +362,21 @@
             </div>
 
             <div class="content">
+                <!-- Paper References -->
+                <div class="special-box" style="border-left: 4px solid #4facfe; background: rgba(79, 172, 254, 0.1);">
+                    <h4 data-en="Original Papers" data-zh="原始论文" style="color: #4facfe; margin: 0 0 10px 0;">Original Papers</h4>
+                    <ul style="margin: 0; padding-left: 20px;">
+                        <li style="margin-bottom: 8px;">
+                            <span style="color: #aaa; font-size: 0.9em;">LeNet-5: </span>
+                            <a href="http://yann.lecun.com/exdb/publis/pdf/lecun-01a.pdf" target="_blank" style="color: #ffffff; text-decoration: underline;">Gradient-Based Learning Applied to Document Recognition</a>
+                        </li>
+                        <li>
+                            <span style="color: #aaa; font-size: 0.9em;">AlexNet: </span>
+                            <a href="https://proceedings.neurips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf" target="_blank" style="color: #ffffff; text-decoration: underline;">ImageNet Classification with Deep Convolutional Neural Networks</a>
+                        </li>
+                    </ul>
+                </div>
+
                 <p data-en="Convolutional Neural Networks (CNNs) are among the most influential models in deep learning, achieving massive success particularly in computer vision tasks. This post dives deep into two milestone CNN architectures: <strong>LeNet-5</strong> and <strong>AlexNet</strong>. We will analyze their structures, key concepts, and formulas, summarizing their contributions to the field." data-zh="卷积神经网络（Convolutional Neural Networks, CNN）是深度学习领域中最具影响力的模型之一，特别是在计算机视觉任务中取得了巨大的成功。本文将深入探讨两个里程碑式的CNN架构：<strong>LeNet-5</strong> 和 <strong>AlexNet</strong>。我们将详细解析它们的网络结构、核心概念以及关键公式，并总结它们对深度学习发展的贡献。">
                     Convolutional Neural Networks (CNNs) are among the most influential models in deep learning, achieving massive success particularly in computer vision tasks. This post dives deep into two milestone CNN architectures: <strong>LeNet-5</strong> and <strong>AlexNet</strong>. We will analyze their structures, key concepts, and formulas, summarizing their contributions to the field.
                 </p>
@@ -581,7 +625,7 @@
                 <h4 data-en="3.2 Key Innovations" data-zh="3.2 关键创新点">3.2 Key Innovations</h4>
 
                 <ul>
-                    <li data-en="<strong>ReLU Activation:</strong> Replaced Sigmoid/Tanh. $f(x) = \max(0, x)$ solves the vanishing gradient problem in deep networks. It also induces <strong>sparsity</strong> (some neurons output 0), which improves computational efficiency and representation capability." data-zh="<strong>ReLU 激活函数：</strong> 替代了 Sigmoid/Tanh。$f(x) = \max(0, x)$ 解决了深层网络中的梯度消失问题。它还引入了<strong>稀疏性</strong>（部分神经元输出为 0），这提高了计算效率和特征表达能力。"><strong>ReLU Activation:</strong> Replaced Sigmoid/Tanh. $f(x) = \max(0, x)$ solves the vanishing gradient problem in deep networks. It also induces <strong>sparsity</strong> (some neurons output 0), which improves computational efficiency and representation capability.</li>
+                    <li data-en="<strong>ReLU Activation:</strong> Replaced Sigmoid/Tanh. $f(x) = \max(0, x)$ solves the vanishing gradient problem in deep networks. It also induces <strong>sparsity</strong> (some neurons output 0), which improves computational efficiency and representation capability." data-zh="<strong>ReLU 激活函数：</strong> 替代了 Sigmoid/Tanh。$f(x) = \max(0, x)$ 解决了深度网络中的梯度消失问题。它还引入了<strong>稀疏性</strong>（部分神经元输出为 0），这提高了计算效率和特征表达能力。"><strong>ReLU Activation:</strong> Replaced Sigmoid/Tanh. $f(x) = \max(0, x)$ solves the vanishing gradient problem in deep networks. It also induces <strong>sparsity</strong> (some neurons output 0), which improves computational efficiency and representation capability.</li>
                     <li data-en="<strong>Dropout:</strong> Randomly sets the output of neurons to zero (p=0.5) during training. This prevents complex co-adaptations on training data. It can be interpreted as training an ensemble of many different thinned networks, which greatly improves generalization." data-zh="<strong>Dropout：</strong> 在训练过程中随机将神经元的输出置为零（概率 p=0.5）。这防止了神经元对训练数据的过度协同适应。可以将其理解为训练了大量不同“稀疏”网络的集成（Ensemble），从而极大地提高了泛化能力。"><strong>Dropout:</strong> Randomly sets the output of neurons to zero (p=0.5) during training. This prevents complex co-adaptations on training data. It can be interpreted as training an ensemble of many different thinned networks, which greatly improves generalization.</li>
                     <li data-en="<strong>Data Augmentation:</strong> Expanded dataset via image translations, horizontal reflections, and PCA color jittering to improve generalization." data-zh="<strong>数据增强 (Data Augmentation)：</strong> 通过图像平移、翻转、裁剪和颜色变换扩充数据集，提高模型泛化能力。"><strong>Data Augmentation:</strong> Expanded dataset via image translations, horizontal reflections, and PCA color jittering to improve generalization.</li>
                     <li data-en="<strong>Overlapping Pooling:</strong> Pooling window size > stride (e.g., 3x3 window, stride 2), reducing information loss." data-zh="<strong>重叠池化 (Overlapping Pooling)：</strong> 池化窗口大小大于步长（如 3x3 窗口，步长 2），减少信息丢失。"><strong>Overlapping Pooling:</strong> Pooling window size > stride (e.g., 3x3 window, stride 2), reducing information loss.</li>
@@ -609,5 +653,17 @@
             </div>
         </article>
     </div>
+
+    <!-- Go Top Button -->
+    <button class="go-top-btn">
+        <ion-icon name="arrow-up-outline"></ion-icon>
+        <span data-en="GO TOP" data-zh="回到顶部">GO TOP</span>
+    </button>
+
+    <!--
+      - ionicon link
+    -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </body>
 </html>

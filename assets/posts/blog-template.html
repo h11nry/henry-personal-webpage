@@ -323,7 +323,38 @@
                 height: 200px;
             }
         }
+
+        /* Go Top Button styles */
+        .go-top-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #ffdb70;
+            color: #1e1e1f;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+        
+        .go-top-btn:hover {
+            background: #ffd700;
+            transform: translateY(-2px);
+        }
+        
+        .go-top-btn:active {
+            transform: translateY(1px);
+        }
     </style>
+    <!-- Language Switch Script -->
+    <script src="../js/blog-lang-switch.js"></script>
 </head>
 
 <body>
@@ -417,6 +448,18 @@
                 <!-- END CONTENT -->
             </div>
         </article>
+
+        <!-- Go Top Button -->
+        <button class="go-top-btn">
+            <ion-icon name="arrow-up-outline"></ion-icon>
+            <span data-en="GO TOP" data-zh="回到顶部">GO TOP</span>
+        </button>
     </div>
+
+    <!--
+      - ionicon link
+    -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </body>
 </html>

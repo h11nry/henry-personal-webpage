@@ -66,4 +66,24 @@ document.addEventListener('DOMContentLoaded', function() {
         // Initialize with saved language
         updateLanguage(currentLang);
     }
+
+    // Go Top Button Functionality
+    const goTopBtn = document.querySelector('.go-top-btn');
+
+    if (goTopBtn) {
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 300) {
+                goTopBtn.classList.add('active');
+            } else {
+                goTopBtn.classList.remove('active');
+            }
+        });
+
+        goTopBtn.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
 });
