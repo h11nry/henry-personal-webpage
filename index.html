@@ -16,6 +16,7 @@
     - custom css link
   -->
   <link rel="stylesheet" href="./assets/css/style.css">
+  <link rel="stylesheet" href="./assets/css/cursor.css">
 
   <!--
     - google font link
@@ -1360,75 +1361,9 @@
   </script>
 
   <!--
-    - Custom Cat Cursor
+    - Custom Cat Cursor Script
   -->
-  <div class="custom-cursor" id="customCursor">
-    <div class="cursor-paw"></div>
-  </div>
-
-  <!--
-    - Cat Cursor Script
-  -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const cursor = document.getElementById('customCursor');
-      const body = document.body;
-      
-      // 跟踪鼠标位置
-      document.addEventListener('mousemove', function(e) {
-        cursor.style.left = e.clientX + 'px';
-        cursor.style.top = e.clientY + 'px';
-      });
-      
-      // 检测可点击元素
-      const clickableElements = document.querySelectorAll('a, button, input, [onclick], [role="button"], .navbar-link, .sidebar-info button, .form-btn, .paper-plane-button');
-      
-      clickableElements.forEach(element => {
-        element.addEventListener('mouseenter', function() {
-          cursor.classList.add('cursor-hover');
-        });
-        
-        element.addEventListener('mouseleave', function() {
-          cursor.classList.remove('cursor-hover');
-        });
-      });
-      
-      // 点击效果
-      document.addEventListener('click', function(e) {
-        createClickEffect(e.clientX, e.clientY);
-      });
-      
-      function createClickEffect(x, y) {
-        const clickEffect = document.createElement('div');
-        clickEffect.className = 'cursor-click';
-        clickEffect.style.left = x + 'px';
-        clickEffect.style.top = y + 'px';
-        
-        // 创建猫脸SVG元素
-        clickEffect.innerHTML = `
-          <div class="cat-svg"></div>
-        `;
-        
-        body.appendChild(clickEffect);
-        
-        // 动画结束后移除元素
-        setTimeout(() => {
-          if (clickEffect.parentNode) {
-            clickEffect.parentNode.removeChild(clickEffect);
-          }
-        }, 600);
-      }
-      
-      // 鼠标离开页面时隐藏光标
-      document.addEventListener('mouseleave', function() {
-        cursor.style.opacity = '0';
-      });
-      
-      document.addEventListener('mouseenter', function() {
-        cursor.style.opacity = '1';
-      });
-    });
-  </script>
+  <script src="./assets/js/cursor.js"></script>
 
 </body>
 
