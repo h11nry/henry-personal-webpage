@@ -193,18 +193,13 @@ function showStatusMessage(message, type = 'info', duration = 3000) {
 // Initialize form handling
 window.addEventListener('load', function() {
     // Check if form exists
-    if (!form) {
-        console.log('Contact form not found');
-        return;
-    }
+    if (!form) return;
     
     // Check if we're running locally or on a server
     const isLocal = window.location.protocol === 'file:' || 
                    window.location.hostname === 'localhost' || 
                    window.location.hostname === '127.0.0.1';
     
-    console.log('Contact form initialized. Environment:', isLocal ? 'Local' : 'Server');
-    console.log('EmailJS available:', typeof emailjs !== 'undefined');
     
     // Main form submit handler
     form.addEventListener('submit', function(e) {
@@ -230,7 +225,6 @@ window.addEventListener('load', function() {
         formBtn.setAttribute('disabled', '');
         
         if (isLocal) {
-            console.log('Using mailto for local environment');
             showStatusMessage('Opening your email client...', 'info', 2000);
             
             const subject = encodeURIComponent(`Portfolio Contact: Message from ${name}`);
@@ -260,15 +254,11 @@ Sent from your portfolio contact form`);
             }, 500);
             
     } else if (typeof emailjs !== 'undefined') {
-      console.log('Using EmailJS for server environment');
             
       // Read EmailJS config from data-attributes on the form
       const publicKey = (form.dataset.emailjsPublicKey || '').trim();
       const serviceId = (form.dataset.emailjsService || '').trim();
       const templateId = (form.dataset.emailjsTemplate || '').trim();
-
-      // Log for debugging
-      console.log('EmailJS config ->', { publicKey, serviceId, templateId });
 
       // Validate IDs
       if (!publicKey || !serviceId || !templateId) {
@@ -284,12 +274,10 @@ Sent from your portfolio contact form`);
       // Send email using EmailJS
       emailjs.sendForm(serviceId, templateId, form)
                 .then(function(response) {
-                    console.log('EmailJS SUCCESS!', response.status, response.text);
                     showStatusMessage('Message sent successfully! I\'ll get back to you soon.', 'success');
                     form.reset();
                 })
                 .catch(function(error) {
-                    console.log('EmailJS FAILED...', error);
                     
                     // Show error and offer mailto fallback
           const errorMessage = (error && (error.text || error.message)) || 'Unknown error occurred';
@@ -317,7 +305,6 @@ Sent from your portfolio contact form`);
                 });
                 
         } else {
-            console.log('EmailJS not available - using mailto fallback');
             showStatusMessage('Opening your email client...', 'info', 2000);
             
             const subject = encodeURIComponent(`Portfolio Contact: Message from ${name}`);
@@ -449,3 +436,108 @@ if (langSwitch) {
   // Initialize with saved language
   updateLanguage(currentLang);
 }
+
+
+// Blog Filtering and Sorting Functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const blogSortSelect = document.getElementById('blog-sort-select');
+  const blogFilterMode = document.getElementById('blog-filter-mode');
+  const blogCategoryGroup = document.getElementById('blog-category-group');
+  const blogCategorySelect = document.getElementById('blog-category-select');
+  const blogApplyBtn = document.getElementById('blog-apply-btn');
+  const blogPostsList = document.querySelector('.blog-posts-list');
+  
+  if (!blogSortSelect || !blogPostsList) return;
+
+  // 1. Extract Categories
+  const blogPosts = Array.from(document.querySelectorAll('.blog-post-item'));
+  const categories = new Map();
+
+  blogPosts.forEach(post => {
+    const categoryElem = post.querySelector('.blog-category');
+    if (categoryElem) {
+      const en = categoryElem.getAttribute('data-en') || categoryElem.textContent.trim();
+      const zh = categoryElem.getAttribute('data-zh') || en;
+      if (!categories.has(en)) {
+        categories.set(en, zh);
+      }
+    }
+  });
+
+  // 2. Populate Category Select
+  categories.forEach((zh, en) => {
+    const option = document.createElement('option');
+    option.value = en;
+    option.textContent = en; 
+    option.setAttribute('data-en', en);
+    option.setAttribute('data-zh', zh);
+    blogCategorySelect.appendChild(option);
+  });
+
+  // Trigger language update for new options
+  if (typeof updateLanguage === 'function' && typeof currentLang !== 'undefined') {
+    updateLanguage(currentLang);
+  }
+
+  // 3. Sorting Function
+  function sortPosts() {
+    const order = blogSortSelect.value;
+    const posts = Array.from(blogPostsList.children);
+    
+    posts.sort((a, b) => {
+      const timeElemA = a.querySelector('time');
+      const timeElemB = b.querySelector('time');
+      
+      if (!timeElemA || !timeElemB) return 0;
+      
+      const timeA = new Date(timeElemA.getAttribute('datetime'));
+      const timeB = new Date(timeElemB.getAttribute('datetime'));
+      
+      return order === 'newest' ? timeB - timeA : timeA - timeB;
+    });
+
+    posts.forEach(post => blogPostsList.appendChild(post));
+  }
+
+  // 4. Filtering Function
+  function filterPosts(category) {
+    const posts = Array.from(blogPostsList.children);
+    
+    posts.forEach(post => {
+      const postCategoryElem = post.querySelector('.blog-category');
+      const postCategory = postCategoryElem ? (postCategoryElem.getAttribute('data-en') || postCategoryElem.textContent.trim()) : '';
+      
+      if (category === 'all' || postCategory === category) {
+        post.style.display = ''; 
+      } else {
+        post.style.display = 'none';
+      }
+    });
+  }
+
+  // 5. Event Listeners
+  if (blogSortSelect) {
+    blogSortSelect.addEventListener('change', sortPosts);
+  }
+
+  if (blogFilterMode) {
+    blogFilterMode.addEventListener('change', function() {
+      if (this.value === 'all') {
+        blogCategoryGroup.style.display = 'none';
+        filterPosts('all');
+      } else {
+        blogCategoryGroup.style.display = 'flex';
+      }
+    });
+  }
+
+  if (blogApplyBtn) {
+    blogApplyBtn.addEventListener('click', function() {
+      const selectedCategory = blogCategorySelect.value;
+      filterPosts(selectedCategory);
+    });
+  }
+
+  // Initial Sort
+  sortPosts();
+});

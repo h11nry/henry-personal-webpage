@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResNet Principles - Henry's Blog</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="../images/300_21_黑猫警长.svg" type="image/x-icon">
+
+    <!-- Custom Cursor CSS -->
+    <link rel="stylesheet" href="../css/cursor.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- MathJax for formulas -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #1e1e1f;
+            color: #d6d6d6;
+            font-family: 'DM Sans', 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            font-size: 16px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #2b2b2c;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+        
+        .blog-header {
+            position: relative;
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #333334;
+            border-radius: 8px;
+        }
+
+        .lang-switch {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 0;
+            padding: 8px 12px;
+            color: #ffffff;
+            font-size: 0.9em;
+            font-weight: 400;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            transition: color 0.3s ease;
+        }
+        
+        .lang-switch:hover {
+            color: #ffdb70;
+        }
+        
+        .lang-en.active,
+        .lang-zh.active {
+            color: #ffdb70;
+            font-weight: 600;
+        }
+        
+        .lang-separator {
+            margin: 0 4px;
+            opacity: 0.5;
+        }
+        
+        .blog-header h1 {
+            color: #ffdb70;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-family: 'Space Grotesk', 'Arial Black', sans-serif;
+            font-weight: 600;
+        }
+        
+        .back-link {
+            color: #ffdb70;
+            text-decoration: none;
+            font-size: 0.9em;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        .article-title {
+            color: #ffffff;
+            font-size: 2.8em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            line-height: 1.1;
+            font-family: 'Space Grotesk', 'Arial Black', sans-serif;
+            letter-spacing: -0.8px;
+        }
+        
+        .blog-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            color: #888;
+        }
+        
+        .blog-category {
+            background: #ffdb70;
+            color: #1e1e1f;
+            padding: 6px 14px;
+            border-radius: 25px;
+            font-size: 0.8em;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .dot {
+            width: 4px;
+            height: 4px;
+            background: #888;
+            border-radius: 50%;
+        }
+        
+        .featured-image {
+            width: 100%;
+            max-width: 100%;
+            height: 450px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s ease;
+            background-color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+            font-size: 2em;
+        }
+        
+        .featured-image:hover {
+            transform: scale(1.02);
+        }
+        
+        .content {
+            font-size: 1.05em;
+            line-height: 1.7;
+        }
+        
+        .content p {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        .content h3 {
+            color: #ffffff;
+            font-size: 1.9em;
+            margin: 35px 0 18px;
+            border-bottom: 3px solid #ffdb70;
+            padding-bottom: 8px;
+            font-family: 'Space Grotesk', 'Arial Black', sans-serif;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+        
+        .content h4 {
+            color: #ffdb70;
+            font-size: 1.25em;
+            margin: 25px 0 12px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+        }
+        
+        .content ul {
+            margin: 15px 0 15px 25px;
+        }
+        
+        .content li {
+            margin-bottom: 8px;
+        }
+        
+        .special-box {
+            background: #383838;
+            border: 1px solid #555;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+        
+        .character-box {
+            background: linear-gradient(135deg, #383838, #444);
+            border-left: 4px solid #ffdb70;
+        }
+        
+        .quote-box {
+            background: #333;
+            border-left: 4px solid #ffdb70;
+            padding: 22px;
+            margin: 25px 0;
+            border-radius: 0 12px 12px 0;
+            font-style: italic;
+            font-size: 1.08em;
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.6;
+        }
+        
+        .conclusion {
+            background: linear-gradient(135deg, #444, #556);
+            border: 2px solid #ffdb70;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .conclusion h4 {
+            color: #ffdb70;
+            margin-bottom: 15px;
+        }
+        
+        strong {
+            color: #ffffff;
+            font-weight: bold;
+        }
+        
+        em {
+            color: #ffdb70;
+            font-style: italic;
+        }
+        
+        .image-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .double-image-container {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+            justify-content: center;
+        }
+        
+        .double-image-container > div {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .double-image-placeholder {
+            width: 100%;
+            height: 250px;
+            background: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            color: #aaa;
+            font-size: 0.8em;
+            border: 1px dashed #555;
+            margin-bottom: 8px;
+        }
+        
+        .content .image-caption {
+            text-align: center;
+            font-size: 0.82em;
+            color: #aaa;
+            margin-top: 8px;
+            font-style: italic;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 400;
+        }
+
+        code {
+            background: #444;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: monospace;
+            color: #ffdb70;
+        }
+
+        /* Go Top Button */
+        .go-top-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #ffdb70;
+            color: #1e1e1f;
+            border: none;
+            border-radius: 25px;
+            padding: 10px 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: background 0.3s ease;
+        }
+        
+        .go-top-btn:hover {
+            background: #ffd700;
+        }
+        
+        ion-icon {
+            font-size: 1.2em;
+        }
+    </style>
+    
+    <!-- Language Switch Script -->
+    <script src="../js/blog-lang-switch.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <header class="blog-header">
+            <button class="lang-switch" id="langSwitch">
+                <span class="lang-en">EN</span>
+                <span class="lang-separator">/</span>
+                <span class="lang-zh">中文</span>
+            </button>
+            <h1 data-en="Henry's Blog" data-zh="Henry 的博客">Henry's Blog</h1>
+            <a href="../../index.html#blog" class="back-link" data-en="← Back to Blog" data-zh="← 返回博客">← Back to Blog</a>
+        </header>
+
+        <article>
+            <h1 class="article-title" data-en="Learning Record: ResNet Principles" data-zh="学习记录：ResNet原理">Learning Record: ResNet Principles</h1>
+            
+            <div class="blog-meta">
+                <span class="blog-category" data-en="Deep Learning" data-zh="深度学习">Deep Learning</span>
+                <span class="dot"></span>
+                <time datetime="2025-11-27">November 27, 2025</time>
+            </div>
+
+            <!-- Featured Image -->
+                <div class="featured-image" style="height: 300px; background: #ffffff; padding: 0; overflow: visible;">
+                <img src="../images/ResNet-basic/ResNet Structure.png" alt="ResNet Architecture" style="width: 50%; height: 100%; object-fit: contain;">
+                </div>
+
+            <div class="content">
+                <!-- Paper Reference -->
+                <div class="special-box" style="border-left: 4px solid #4facfe; background: rgba(79, 172, 254, 0.1);">
+                    <h4 data-en="Original Paper" data-zh="原始论文" style="color: #4facfe; margin: 0 0 10px 0;">Original Paper</h4>
+                    <p style="margin: 0;">
+                        <a href="https://arxiv.org/abs/1512.03385" target="_blank" style="color: #ffffff; text-decoration: none; font-weight: 500; display: flex; align-items: center; gap: 8px;">
+                            <span style="text-decoration: underline;">Deep Residual Learning for Image Recognition</span>
+                            <span style="font-size: 0.8em; background: #4facfe; color: #000; padding: 2px 6px; border-radius: 4px;">arXiv</span>
+                        </a>
+                    </p>
+                </div>
+
+                <h3 data-en="Background of ResNet" data-zh="ResNet 网络诞生背景">Background of ResNet</h3>
+                
+                <p data-en="<strong>Deep Residual Network (ResNet)</strong> is a novel network architecture proposed by Kaiming He's team at Microsoft in their 2015 paper <em>Deep Residual Learning for Image Recognition</em>. Its core module is the <strong>residual block</strong>." data-zh="<strong>深度残差网络 (Deep Residual Network)</strong> 是 2015 年微软何凯明团队在论文《Deep Residual Learning for Image Recognition》中提出的一种全新的网络结构。其核心模块是 <strong>残差块 (Residual Block)</strong>。">
+                    <strong>Deep Residual Network (ResNet)</strong> is a novel network architecture proposed by Kaiming He's team at Microsoft in their 2015 paper <em>Deep Residual Learning for Image Recognition</em>. Its core module is the <strong>residual block</strong>.
+                </p>
+
+                <p data-en="The introduction of the residual block structure allowed deep neural networks to extend to 100, 1000, or even more layers. This breakthrough enabled the team to achieve outstanding results in the <strong>ILSVRC 2015</strong> classification competition and profoundly influenced the design of subsequent deep neural networks." data-zh="正是由于残差块结构的出现，使得深度神经网络模型的层数可以不断加深到 100 层、1000 层甚至更深。这一突破使得该团队在当年的 <strong>ILSVRC 2015</strong> 分类竞赛中取得了卓越成绩，也深刻地影响了后续许多深度神经网络的结构设计。">
+                    The introduction of the residual block structure allowed deep neural networks to extend to 100, 1000, or even more layers. This breakthrough enabled the team to achieve outstanding results in the <strong>ILSVRC 2015</strong> classification competition and profoundly influenced the design of subsequent deep neural networks.
+                </p>
+
+                <p data-en="The success of ResNet is not only reflected in its competition performance but also in its innovative <strong>skip connection</strong> (or <strong>shortcut</strong>) design. This design significantly solves the <strong>model degradation</strong> problem caused by increasing depth in convolutional networks, allowing model depth to increase by an order of magnitude, reaching hundreds or even thousands of layers." data-zh="残差网络的成功不仅体现在其在 ILSVRC 2015 竞赛中的优异表现，更在于其 <strong>跳跃连接 (Skip Connection)</strong> 或 <strong>捷径 (Shortcut)</strong> 的优秀设计。这种设计大幅解决了卷积网络随层数加深而导致的 <strong>模型退化 (Model Degradation)</strong> 问题，使模型深度提高了一个数量级，达到上百甚至上千层。">
+                    The success of ResNet is not only reflected in its competition performance but also in its innovative <strong>skip connection</strong> (or <strong>shortcut</strong>) design. This design significantly solves the <strong>model degradation</strong> problem caused by increasing depth in convolutional networks, allowing model depth to increase by an order of magnitude, reaching hundreds or even thousands of layers.
+                </p>
+
+                <!-- Placeholder for future content images -->
+                <div class="featured-image" style="height: 300px; background: #ffffff; padding: 0; overflow: visible;">
+                <img src="../images/ResNet-basic/Residual Learning Block.png" alt="ResNet Architecture" style="width: 50%; height: 100%; object-fit: contain;">
+                </div>
+
+                <div class="featured-image" style="height: 300px; background: #ffffff; padding: 0; overflow: visible;">
+                <img src="../images/ResNet-basic/Residual Learning Block - dual.png" alt="ResNet Architecture" style="width: 50%; height: 100%; object-fit: contain;">
+                </div>
+
+                <h3 data-en="Problems Caused by Deepening Networks" data-zh="网络加深带来哪些问题？">Problems Caused by Deepening Networks</h3>
+                
+                <p data-en="Before the introduction of structures like residual blocks, if a neural network model was too deep, it could lead to <strong>vanishing or exploding gradients</strong>. While some regularization methods could alleviate this, continuing to increase the depth brought about the problem of <strong>model degradation</strong>." data-zh="在残差块这样的结构引入之前，如果一个神经网络模型的深度太深，可能会带来<strong>梯度消失和梯度爆炸</strong>的问题。随着一些正则化方法的应用可以缓解此问题，但是随着层数继续加深，又带来了<strong>模型退化 (Model Degradation)</strong> 的问题。">
+                    Before the introduction of structures like residual blocks, if a neural network model was too deep, it could lead to <strong>vanishing or exploding gradients</strong>. While some regularization methods could alleviate this, continuing to increase the depth brought about the problem of <strong>model degradation</strong>.
+                </p>
+
+                <p data-en="<strong>Why does deepening the network cause degradation?</strong> Theoretically, even if the newly added layers learn nothing and maintain an identity output (weights set to 1), the network's accuracy should equal that of the shallower network. If they learn useful features, accuracy should improve. It seems accuracy should always be non-decreasing with depth." data-zh="<strong>为什么加深网络会带来退化问题？</strong> 理论上，即使新增的层什么都不学习，保持恒等输出（权重设为1），网络的精度也应该等于原有水平；如果学到了有用特征，精度应该更高。看起来加深后的精度应该大于等于加深前。">
+                    <strong>Why does deepening the network cause degradation?</strong> Theoretically, even if the newly added layers learn nothing and maintain an identity output (weights set to 1), the network's accuracy should equal that of the shallower network. If they learn useful features, accuracy should improve. It seems accuracy should always be non-decreasing with depth.
+                </p>
+
+                <p data-en="In reality, maintaining an &quot;identity mapping&quot; for new layers is difficult. Since every layer is processed through the <strong>ReLU activation function</strong> during training, this non-linear transformation inevitably causes information loss (whether of effective or redundant features). Therefore, simply stacking layers inevitably leads to degradation problems." data-zh="实际上，让新增的层保持“恒等映射”恰恰很困难。因为在训练过程中，每一层都通过 <strong>ReLU 激活函数</strong>处理，这种非线性变换必然带来特征的信息损失（无论是有效特征还是冗余特征）。因此，简单的堆叠层数必然会带来退化问题。">
+                    In reality, maintaining an "identity mapping" for new layers is difficult. Since every layer is processed through the <strong>ReLU activation function</strong> during training, this non-linear transformation inevitably causes information loss (whether of effective or redundant features). Therefore, simply stacking layers inevitably leads to degradation problems.
+                </p>
+
+                <h3 data-en="ResNet Basic Architecture: Residual Block" data-zh="ResNet 的基础架构–残差块">ResNet Basic Architecture: Residual Block</h3>
+                <p data-en="The fundamental building block of ResNet is the <strong>Residual Block</strong>. In a residual block, the input can propagate forward faster through a cross-layer data line (shortcut)." data-zh="ResNet 的基础架构是 <strong>残差块 (Residual Block)</strong>。在残差块中，输入可通过跨层数据线路更快地向前传播。">
+                    The fundamental building block of ResNet is the <strong>Residual Block</strong>. In a residual block, the input can propagate forward faster through a cross-layer data line (shortcut).
+                </p>
+                <p data-en="ResNet follows VGG's full $3 \times 3$ convolutional layer design. Key features include:" data-zh="ResNet 沿用了 VGG 完整的 $3 \times 3$ 卷积层设计。其主要特征包括：">
+                    ResNet follows VGG's full $3 \times 3$ convolutional layer design. Key features include:
+                </p>
+                <ul>
+                    <li data-en="<strong>Structure:</strong> A residual block typically consists of two $3 \times 3$ convolutional layers with the same number of output channels." data-zh="<strong>结构：</strong> 残差块里首先有 2 个有相同输出通道数的 $3 \times 3$ 卷积层。">
+                        <strong>Structure:</strong> A residual block typically consists of two $3 \times 3$ convolutional layers with the same number of output channels.
+                    </li>
+                    <li data-en="<strong>Components:</strong> Each convolutional layer is followed by a <strong>Batch Normalization (BN)</strong> layer and a <strong>ReLU</strong> activation function." data-zh="<strong>组件：</strong> 每个卷积层后接一个<strong>批量规范化 (Batch Normalization)</strong> 层和 <strong>ReLU</strong> 激活函数。">
+                        <strong>Components:</strong> Each convolutional layer is followed by a <strong>Batch Normalization (BN)</strong> layer and a <strong>ReLU</strong> activation function.
+                    </li>
+                    <li data-en="<strong>Shortcut Connection:</strong> A cross-layer data path skips these two convolution operations and adds the input directly before the final ReLU activation." data-zh="<strong>捷径连接：</strong> 通过跨层数据通路，跳过这 2 个卷积运算，将输入直接加在最后的 ReLU 激活函数前。">
+                        <strong>Shortcut Connection:</strong> A cross-layer data path skips these two convolution operations and adds the input directly before the final ReLU activation.
+                    </li>
+                    <li data-en="<strong>Dimension Matching:</strong> This design requires the output of the two convolutional layers to have the same shape as the input so they can be added." data-zh="<strong>维度匹配：</strong> 这样的设计要求 2 个卷积层的输出与输入形状一样，从而使它们可以相加。">
+                        <strong>Dimension Matching:</strong> This design requires the output of the two convolutional layers to have the same shape as the input so they can be added.
+                    </li>
+                    <li data-en="<strong>Channel Adjustment:</strong> If we want to change the number of channels, we need to introduce an extra $1 \times 1$ convolutional layer to transform the input into the required shape before the addition operation." data-zh="<strong>通道调整：</strong> 如果想改变通道数，就需要引入一个额外的 $1 \times 1$ 卷积层来将输入变换成需要的形状后再做相加运算。">
+                        <strong>Channel Adjustment:</strong> If we want to change the number of channels, we need to introduce an extra $1 \times 1$ convolutional layer to transform the input into the required shape before the addition operation.
+                    </li>
+                </ul>
+
+                <div class="special-box character-box">
+                    <h4 data-en="Example 1: Residual Block without 1x1 Conv" data-zh="没有 1x1 卷积改变输入通道的残差块">Example 1: Residual Block without 1x1 Conv</h4>
+                    <p data-en="<strong>Input:</strong> Image $x$ of size $224 \times 224 \times 3$." data-zh="<strong>输入数据：</strong> $x$ 为 $224 \times 224 \times 3$ 三通道的图像。"><strong>Input:</strong> Image $x$ of size $224 \times 224 \times 3$.</p>
+                    <ul>
+                        <li data-en="<strong>(1)</strong> Input: $224 \times 224 \times 3$. Filters: 64. Size: $3 \times 3 \times 3$. Stride: 1. Padding: 1. <strong>Output:</strong> Feature map of shape $224 \times 224 \times 64$." data-zh="<strong>(1)</strong> 输入为 $224 \times 224 \times 3$，卷积核数量为 64 个；尺寸 $3 \times 3 \times 3$；步幅 1，填充 1；卷积后得到 shape 为 $224 \times 224 \times 64$ 的特征图。">
+                            <strong>(1)</strong> Input: $224 \times 224 \times 3$. Filters: 64. Size: $3 \times 3 \times 3$. Stride: 1. Padding: 1. <strong>Output:</strong> Feature map of shape $224 \times 224 \times 64$.
+                        </li>
+                        <li data-en="<strong>(2)</strong> Input: $224 \times 224 \times 64$. Apply Batch Normalization and ReLU activation. <strong>Output:</strong> Shape remains $224 \times 224 \times 64$." data-zh="<strong>(2)</strong> 输入为 $224 \times 224 \times 64$，经过批量规范化 (BN) 和 ReLU 激活。输出特征图大小不变，仍为 $224 \times 224 \times 64$。">
+                            <strong>(2)</strong> Input: $224 \times 224 \times 64$. Apply Batch Normalization and ReLU activation. <strong>Output:</strong> Shape remains $224 \times 224 \times 64$.
+                        </li>
+                        <li data-en="<strong>(3)</strong> Input: $224 \times 224 \times 64$. Filters: 3. Size: $3 \times 3 \times 64$. Stride: 1. Padding: 1. <strong>Output:</strong> Feature map of shape $224 \times 224 \times 3$." data-zh="<strong>(3)</strong> 输入为 $224 \times 224 \times 64$，卷积核数量为 3 个；尺寸 $3 \times 3 \times 64$；步幅 1，填充 1；卷积后得到 shape 为 $224 \times 224 \times 3$ 的特征图。">
+                            <strong>(3)</strong> Input: $224 \times 224 \times 64$. Filters: 3. Size: $3 \times 3 \times 64$. Stride: 1. Padding: 1. <strong>Output:</strong> Feature map of shape $224 \times 224 \times 3$.
+                        </li>
+                        <li data-en="<strong>(4)</strong> Input: $224 \times 224 \times 3$. Apply Batch Normalization. <strong>Output:</strong> Shape remains $224 \times 224 \times 3$." data-zh="<strong>(4)</strong> 输入为 $224 \times 224 \times 3$，经过批量规范化。输出特征图大小不变，为 $224 \times 224 \times 3$。">
+                            <strong>(4)</strong> Input: $224 \times 224 \times 3$. Apply Batch Normalization. <strong>Output:</strong> Shape remains $224 \times 224 \times 3$.
+                        </li>
+                        <li data-en="<strong>(5) Addition:</strong> Add the output from Step 4 ($224 \times 224 \times 3$) to the original input $x$ ($224 \times 224 \times 3$). Since dimensions match, no 1x1 convolution is needed. Direct element-wise addition is performed." data-zh="<strong>(5) 相加：</strong> 将经过上述操作的输出特征图 ($224 \times 224 \times 3$) 与原始输入 $x$ ($224 \times 224 \times 3$) 进行相加。因高宽和通道数一致，无需 1x1 卷积调整，直接相加即可。">
+                            <strong>(5) Addition:</strong> Add the output from Step 4 ($224 \times 224 \times 3$) to the original input $x$ ($224 \times 224 \times 3$). Since dimensions match, no 1x1 convolution is needed. Direct element-wise addition is performed.
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="special-box character-box">
+                    <h4 data-en="Example 2: Residual Block with 1x1 Conv (Channel Change)" data-zh="需要 1x1 卷积改变输入通道的残差块">Example 2: Residual Block with 1x1 Conv (Channel Change)</h4>
+                    <p data-en="<strong>Input:</strong> Image $x$ of size $224 \times 224 \times 3$." data-zh="<strong>输入数据：</strong> $x$ 为 $224 \times 224 \times 3$ 三通道的图像。"><strong>Input:</strong> Image $x$ of size $224 \times 224 \times 3$.</p>
+                    <ul>
+                        <li data-en="<strong>(1)</strong> Input: $224 \times 224 \times 3$. Filters: 64. Size: $3 \times 3 \times 3$. Stride: 1. Padding: 1. <strong>Output:</strong> Feature map of shape $224 \times 224 \times 64$." data-zh="<strong>(1)</strong> 输入为 $224 \times 224 \times 3$，卷积核数量为 64 个；尺寸 $3 \times 3 \times 3$；步幅 1，填充 1；卷积后得到 shape 为 $224 \times 224 \times 64$ 的特征图。">
+                            <strong>(1)</strong> Input: $224 \times 224 \times 3$. Filters: 64. Size: $3 \times 3 \times 3$. Stride: 1. Padding: 1. <strong>Output:</strong> Feature map of shape $224 \times 224 \times 64$.
+                        </li>
+                        <li data-en="<strong>(2)</strong> Input: $224 \times 224 \times 64$. Apply Batch Normalization and ReLU activation. <strong>Output:</strong> Shape remains $224 \times 224 \times 64$." data-zh="<strong>(2)</strong> 输入为 $224 \times 224 \times 64$，经过批量规范化，然后经过 ReLU 激活函数进行激活。输出特征图大小不变，为 $224 \times 224 \times 64$。">
+                            <strong>(2)</strong> Input: $224 \times 224 \times 64$. Apply Batch Normalization and ReLU activation. <strong>Output:</strong> Shape remains $224 \times 224 \times 64$.
+                        </li>
+                        <li data-en="<strong>(3)</strong> Input: $224 \times 224 \times 64$. Filters: 64. Size: $3 \times 3 \times 64$. Stride: 1. Padding: 1. <strong>Output:</strong> Feature map of shape $224 \times 224 \times 64$." data-zh="<strong>(3)</strong> 输入为 $224 \times 224 \times 64$，卷积核数量为 64 个；尺寸 $3 \times 3 \times 64$；步幅 1，填充 1；卷积后得到 shape 为 $224 \times 224 \times 64$ 的特征图。">
+                            <strong>(3)</strong> Input: $224 \times 224 \times 64$. Filters: 64. Size: $3 \times 3 \times 64$. Stride: 1. Padding: 1. <strong>Output:</strong> Feature map of shape $224 \times 224 \times 64$.
+                        </li>
+                        <li data-en="<strong>(4)</strong> Input: $224 \times 224 \times 64$. Apply Batch Normalization. <strong>Output:</strong> Shape remains $224 \times 224 \times 64$." data-zh="<strong>(4)</strong> 输入为 $224 \times 224 \times 64$，经过批量规范化。输出特征图大小不变，为 $224 \times 224 \times 64$。">
+                            <strong>(4)</strong> Input: $224 \times 224 \times 64$. Apply Batch Normalization. <strong>Output:</strong> Shape remains $224 \times 224 \times 64$.
+                        </li>
+                    </ul>
+                    <p data-en="<strong>Explanation:</strong> The output from steps (1)-(4) is $224 \times 224 \times 64$, while the input $x$ is $224 \times 224 \times 3$. The channel counts differ, so we need a $1 \times 1$ convolution to change the channels of input $x$." data-zh="<strong>解释：</strong> 此时，残差结构需要输出特征图之前将经过上述 (1)-(4) 操作的输出特征图为 $224 \times 224 \times 64$；而输入数据 $x$ 的大小为 $224 \times 224 \times 3$，那么两个特征图通道数不一，需要利用 $1 \times 1$ 的卷积核对输出 $x$ 的通道进行改变。">
+                        <strong>Explanation:</strong> The output from steps (1)-(4) is $224 \times 224 \times 64$, while the input $x$ is $224 \times 224 \times 3$. The channel counts differ, so we need a $1 \times 1$ convolution to change the channels of input $x$.
+                    </p>
+                    <ul>
+                        <li data-en="<strong>(5) Shortcut Path:</strong> Input $x$ ($224 \times 224 \times 3$). Filters: 64. Size: $1 \times 1 \times 3$. Stride: 1. Padding: 0. <strong>Output:</strong> Feature map of shape $224 \times 224 \times 64$." data-zh="<strong>(5) 捷径分支：</strong> 输入 $x$ 特征图大小为 $224 \times 224 \times 3$，卷积核数量为 64 个；尺寸 $1 \times 1 \times 3$；步幅 1，填充 0；卷积后得到 shape 为 $224 \times 224 \times 64$ 的特征图。">
+                            <strong>(5) Shortcut Path:</strong> Input $x$ ($224 \times 224 \times 3$). Filters: 64. Size: $1 \times 1 \times 3$. Stride: 1. Padding: 0. <strong>Output:</strong> Feature map of shape $224 \times 224 \times 64$.
+                        </li>
+                        <li data-en="<strong>(6) Addition:</strong> The output from the $1 \times 1$ conv is $224 \times 224 \times 64$. The output from steps (1)-(4) is $224 \times 224 \times 64$. Dimensions match, so we add them. Finally, apply ReLU activation." data-zh="<strong>(6) 相加：</strong> 经过 $1 \times 1$ 卷积操作的输出特征图为 $224 \times 224 \times 64$，经过 (1)-(4) 操作的输出特征图大小为 $224 \times 224 \times 64$；这两个特征图的高宽和通道数一样，此时就可以直接进行相加即可。最后将输出的特征图经过 ReLU 激活函数进行激活。">
+                            <strong>(6) Addition:</strong> The output from the $1 \times 1$ conv is $224 \times 224 \times 64$. The output from steps (1)-(4) is $224 \times 224 \times 64$. Dimensions match, so we add them. Finally, apply ReLU activation.
+                        </li>
+                    </ul>
+                </div>
+
+                <h3 data-en="Batch Normalization" data-zh="Batch Normalization">Batch Normalization</h3>
+                <p data-en="<strong>Batch Normalization (BN)</strong> was proposed by Google in 2015. It is a deep neural network training technique that not only accelerates model convergence but also makes training deep network models easier and more stable. Currently, BN has become a standard technique for almost all convolutional neural networks." data-zh="<strong>Batch Normalization (BN)</strong> 是由 Google 于 2015 年提出，这是一个深度神经训练的技巧，它不仅可以加快了模型的收敛速度，使训练深层网络模型更加容易和稳定。目前 BN 已经成为几乎所有卷积神经网络的标配技巧了。">
+                    <strong>Batch Normalization (BN)</strong> was proposed by Google in 2015. It is a deep neural network training technique that not only accelerates model convergence but also makes training deep network models easier and more stable. Currently, BN has become a standard technique for almost all convolutional neural networks.
+                </p>
+                <p data-en="Literally, Batch Normalization means normalizing each batch of data. Indeed, for a batch of data $\{x_1, x_2, ..., x_n\}$ during training (note that this data can be the input or the output of any intermediate layer), we perform normalization. Before BN appeared, normalization operations were generally performed at the data input layer. However, the emergence of BN broke this rule; we can perform normalization at any layer in the network. Since most optimization methods we use now are mini-batch SGD, our normalization operation becomes Batch Normalization." data-zh="从字面意思看来 Batch Normalization（简称 BN）就是对每一批数据进行归一化，确实如此，对于训练中某一个 batch 的数据 $\{x_1, x_2, ..., x_n\}$，注意这个数据是可以输入也可以是网络中间的某一层输出。在 BN 出现之前，我们的归一化操作一般都在数据输入层，对输入的数据进行求均值以及求方差做归一化，但是 BN 的出现打破了这一个规定，我们可以在网络中任意一层进行归一化处理，因为我们现在所用的优化方法大多都是 min-batch SGD，所以我们的归一化操作就成为 Batch Normalization。">
+                    Literally, Batch Normalization means normalizing each batch of data. Indeed, for a batch of data $\{x_1, x_2, ..., x_n\}$ during training (note that this data can be the input or the output of any intermediate layer), we perform normalization. Before BN appeared, normalization operations were generally performed at the data input layer. However, the emergence of BN broke this rule; we can perform normalization at any layer in the network. Since most optimization methods we use now are mini-batch SGD, our normalization operation becomes Batch Normalization.
+                </p>
+
+                <div class="special-box">
+                    <h4 data-en="BN Calculation Steps" data-zh="BN 计算步骤">BN Calculation Steps</h4>
+                    <p data-en="Input: Values of $x$ over a mini-batch: $\mathcal{B} = \{x_{1...m}\}$; Parameters to be learned: $\gamma, \beta$" data-zh="输入：小批量 $x$ 的值：$\mathcal{B} = \{x_{1...m}\}$；待学习参数：$\gamma, \beta$">
+                        Input: Values of $x$ over a mini-batch: $\mathcal{B} = \{x_{1...m}\}$; Parameters to be learned: $\gamma, \beta$
+                    </p>
+                    <ul>
+                        <li data-en="<strong>1. Calculate Batch Mean:</strong> $$\mu_{\mathcal{B}} \leftarrow \frac{1}{m}\sum_{i=1}^m x_i$$" data-zh="<strong>1. 计算批处理数据均值：</strong> $$\mu_{\mathcal{B}} \leftarrow \frac{1}{m}\sum_{i=1}^m x_i$$">
+                            <strong>1. Calculate Batch Mean:</strong> $$\mu_{\mathcal{B}} \leftarrow \frac{1}{m}\sum_{i=1}^m x_i$$
+                        </li>
+                        <li data-en="<strong>2. Calculate Batch Variance:</strong> $$\sigma_{\mathcal{B}}^2 \leftarrow \frac{1}{m}\sum_{i=1}^m (x_i - \mu_{\mathcal{B}})^2$$" data-zh="<strong>2. 计算批处理数据方差：</strong> $$\sigma_{\mathcal{B}}^2 \leftarrow \frac{1}{m}\sum_{i=1}^m (x_i - \mu_{\mathcal{B}})^2$$">
+                            <strong>2. Calculate Batch Variance:</strong> $$\sigma_{\mathcal{B}}^2 \leftarrow \frac{1}{m}\sum_{i=1}^m (x_i - \mu_{\mathcal{B}})^2$$
+                        </li>
+                        <li data-en="<strong>3. Normalize:</strong> $$\hat{x}_i \leftarrow \frac{x_i - \mu_{\mathcal{B}}}{\sqrt{\sigma_{\mathcal{B}}^2 + \epsilon}}$$ (where $\epsilon$ is a small constant for numerical stability)" data-zh="<strong>3. 规范化：</strong> $$\hat{x}_i \leftarrow \frac{x_i - \mu_{\mathcal{B}}}{\sqrt{\sigma_{\mathcal{B}}^2 + \epsilon}}$$ （其中 $\epsilon$ 是为了数值稳定性而加的微小常量）">
+                            <strong>3. Normalize:</strong> $$\hat{x}_i \leftarrow \frac{x_i - \mu_{\mathcal{B}}}{\sqrt{\sigma_{\mathcal{B}}^2 + \epsilon}}$$ (where $\epsilon$ is a small constant for numerical stability)
+                        </li>
+                        <li data-en="<strong>4. Scale and Shift:</strong> $$y_i \leftarrow \gamma \hat{x}_i + \beta \equiv \text{BN}_{\gamma,\beta}(x_i)$$ (return learned parameters $\gamma, \beta$)" data-zh="<strong>4. 尺度变换和偏移：</strong> $$y_i \leftarrow \gamma \hat{x}_i + \beta \equiv \text{BN}_{\gamma,\beta}(x_i)$$ （最后返回对应的学习参数 $\gamma, \beta$）">
+                            <strong>4. Scale and Shift:</strong> $$y_i \leftarrow \gamma \hat{x}_i + \beta \equiv \text{BN}_{\gamma,\beta}(x_i)$$ (return learned parameters $\gamma, \beta$)
+                        </li>
+                    </ul>
+                </div>
+
+                <h3 data-en="Why Normalization is Needed?" data-zh="为什么需要归一化">Why Normalization is Needed?</h3>
+                <p data-en="Once the network starts training, parameters are updated. Except for the input layer data (which we manually normalize), the distribution of input data for every subsequent layer keeps changing." data-zh="我们知道网络一旦 train 起来，那么参数就要发生更新，除了输入层的数据外（因为输入层数据，我们已经人为的为每个样本归一化），后面网络每一层的输入数据分布是一直在发生变化的。">
+                    Once the network starts training, parameters are updated. Except for the input layer data (which we manually normalize), the distribution of input data for every subsequent layer keeps changing.
+                </p>
+                <ul>
+                    <li data-en="<strong>Internal Covariate Shift:</strong> Updates to the parameters of earlier layers cause changes in the input distribution of later layers." data-zh="<strong>内部协变量偏移：</strong> 前面层训练参数的更新将导致后面层输入数据分布的变化。">
+                        <strong>Internal Covariate Shift:</strong> Updates to the parameters of earlier layers cause changes in the input distribution of later layers.
+                    </li>
+                    <li data-en="<strong>Example:</strong> The second layer's input is calculated from the first layer's parameters. Since the first layer's parameters change throughout training, the second layer's input distribution inevitably changes." data-zh="<strong>举例：</strong> 网络的第二层输入是由第一层的参数计算得到的，而第一层的参数在整个训练过程中一直在变化，因此必然会引起第二层输入数据分布的改变。">
+                        <strong>Example:</strong> The second layer's input is calculated from the first layer's parameters. Since the first layer's parameters change throughout training, the second layer's input distribution inevitably changes.
+                    </li>
+                    <li data-en="<strong>Purpose of BN:</strong> BN was proposed to address this issue. Its goal is to eliminate the influence of data scale on parameter updates, allowing the model to focus on updating parameters with truly large weights." data-zh="<strong>BN 的目的：</strong> BN 的提出就是要解决在训练过程中中间层数据分布发生改变的情况。归一化的目的是为了消除数据量纲对参数更新的影响，让模型关注权重真正大的参数并进行更新。">
+                        <strong>Purpose of BN:</strong> BN was proposed to address this issue. Its goal is to eliminate the influence of data scale on parameter updates, allowing the model to focus on updating parameters with truly large weights.
+                    </li>
+                </ul>
+
+                <h3 data-en="How BN Works?" data-zh="BN 怎么做？">How BN Works?</h3>
+                <p data-en="The BN process mainly consists of 4 steps:" data-zh="BN 步骤主要分为 4 步：">The BN process mainly consists of 4 steps:</p>
+                <ul>
+                    <li data-en="<strong>(1) Calculate Mean:</strong> Compute the mean of the data for each training batch." data-zh="<strong>(1) 求均值：</strong> 求每一个训练批次数据的均值。"><strong>(1) Calculate Mean:</strong> Compute the mean of the data for each training batch.</li>
+                    <li data-en="<strong>(2) Calculate Variance:</strong> Compute the variance of the data for each training batch." data-zh="<strong>(2) 求方差：</strong> 求每一个训练批次数据的方差。"><strong>(2) Calculate Variance:</strong> Compute the variance of the data for each training batch.</li>
+                    <li data-en="<strong>(3) Normalize:</strong> Use the calculated mean and variance to normalize the batch data, obtaining a 0-1 distribution. $\epsilon$ is a small positive number used to avoid division by zero." data-zh="<strong>(3) 归一化：</strong> 使用求得的均值和方差对该批次的训练数据做归一化，获得 0-1 分布。其中 $\epsilon$ 是为了避免除数为 0 时所使用的微小正数。"><strong>(3) Normalize:</strong> Use the calculated mean and variance to normalize the batch data, obtaining a 0-1 distribution. $\epsilon$ is a small positive number used to avoid division by zero.</li>
+                    <li data-en="<strong>(4) Scale and Shift:</strong> Multiply $x_i$ by $\gamma$ to adjust the scale, then add $\beta$ to shift it, obtaining $y_i$. Here, $\gamma$ is the scale factor and $\beta$ is the shift factor. This step is the essence of BN. Since normalized $x_i$ is basically restricted to a normal distribution, the network's expressive power decreases. To solve this, we introduce two new parameters: $\gamma$ and $\beta$, which are learned by the network itself during training." data-zh="<strong>(4) 尺度变换和偏移：</strong> 将 $x_i$ 乘以 $\gamma$ 调整数值大小，再加上 $\beta$ 增加偏移后得到 $y_i$，这里的 $\gamma$ 是尺度因子，$\beta$ 是平移因子。这一步是 BN 的精髓，由于归一化后的 $x_i$ 基本会被限制在正态分布下，使得网络的表达能力下降。为解决该问题，我们引入两个新的参数：$\gamma, \beta$。$\gamma$ 和 $\beta$ 是在训练时网络自己学习得到的。">
+                        <strong>(4) Scale and Shift:</strong> Multiply $x_i$ by $\gamma$ to adjust the scale, then add $\beta$ to shift it, obtaining $y_i$. Here, $\gamma$ is the scale factor and $\beta$ is the shift factor. This step is the essence of BN. Since normalized $x_i$ is basically restricted to a normal distribution, the network's expressive power decreases. To solve this, we introduce two new parameters: $\gamma$ and $\beta$, which are learned by the network itself during training.
+                    </li>
+                </ul>
+
+                <h3 data-en="What exactly does BN solve?" data-zh="BN 到底解决了什么？">What exactly does BN solve?</h3>
+                <ul>
+                    <li data-en="<strong>(1) Combat Gradient Vanishing:</strong><br>After subtracting the mean and dividing by the variance, the data is shifted to the central region. For most activation functions, this region has the largest gradients or at least non-zero gradients, which can be seen as an effective means to combat gradient vanishing. If we do this for every layer, the data distribution will always be in a region sensitive to changes, making training more efficient." data-zh="<strong>(1) 对抗梯度消失：</strong><br>减均值除方差后，数据就被移到中心区域，对于大多数激活函数而言，这个区域的梯度都是最大的或者是有梯度的，这可以看做是一种对抗梯度消失的有效手段。如果对于每一层数据都那么做的话，数据的分布总是在随着变化敏感的区域，相当于不用考虑数据分布变化了，这样训练起来更有效率。">
+                        <strong>(1) Combat Gradient Vanishing:</strong><br>After subtracting the mean and dividing by the variance, the data is shifted to the central region. For most activation functions, this region has the largest gradients or at least non-zero gradients, which can be seen as an effective means to combat gradient vanishing. If we do this for every layer, the data distribution will always be in a region sensitive to changes, making training more efficient.
+                    </li>
+                    <li data-en="<strong>(2) Why Step 4 is Needed?</strong><br>Can't we achieve the desired effect just by subtracting the mean and dividing by the variance? The distribution obtained after these operations is a normal distribution. Can we assume that a normal distribution is the best or most representative distribution for our training sample features?" data-zh="<strong>(2) 为什么要有第 4 步？</strong><br>不是仅使用减均值除方差操作就能获得目的效果吗？我们思考一个问题，减均值除方差得到的分布是正态分布，我们能否认为正态分布就是最好或最能体现我们训练样本的特征分布呢？">
+                        <strong>(2) Why Step 4 is Needed?</strong><br>Can't we achieve the desired effect just by subtracting the mean and dividing by the variance? The distribution obtained after these operations is a normal distribution. Can we assume that a normal distribution is the best or most representative distribution for our training sample features?
+                    </li>
+                    <li data-en="<strong>(3) Preserving Network Performance:</strong><br>The answer is no. For example, the data itself might be very asymmetric, or the activation function might not work best with data having a variance of 1. For instance, the Sigmoid activation function has little gradient change between -1 and 1. In this case, the effect of non-linear transformation cannot be well reflected. In other words, the operation of subtracting mean and dividing by variance might weaken the network's performance! To address this, the 4th step is added to complete the true Batch Normalization." data-zh="<strong>(3) 避免削弱网络性能：</strong><br>答案是不能，比如数据本身就很不对称，或者激活函数未必是对方差为 1 的数据最好的效果，比如 Sigmoid 激活函数，在 -1~1 之间的梯度变化不大，那么非线性变换的作用就不能很好的体现，换言之就是，减均值除方差操作后可能会削弱网络的性能！针对该情况，在前面三步之后加入第 4 步完成真正的 Batch Normalization。">
+                        <strong>(3) Preserving Network Performance:</strong><br>The answer is no. For example, the data itself might be very asymmetric, or the activation function might not work best with data having a variance of 1. For instance, the Sigmoid activation function has little gradient change between -1 and 1. In this case, the effect of non-linear transformation cannot be well reflected. In other words, the operation of subtracting mean and dividing by variance might weaken the network's performance! To address this, the 4th step is added to complete the true Batch Normalization.
+                    </li>
+                    <li data-en="<strong>(4) The Essence of BN:</strong><br>The essence of BN is to use optimization to adjust the variance size and mean position, making the new distribution fit the true distribution of the data better and ensuring the model's non-linear expressive power. An extreme case of BN is when these two parameters equal the mini-batch's mean and variance; in this case, the data after Batch Normalization is exactly the same as the input. Of course, in general, they are different." data-zh="<strong>(4) BN 的本质：</strong><br>BN 的本质就是利用优化变一下方差大小和均值位置，使得新的分布更切合数据的真实分布，保证模型的非线性表达能力。BN 的极端的情况就是这两个参数等于 mini-batch 的均值和方差，那么经过 Batch Normalization 之后的数据和输入完全一样，当然一般的情况是不同的。">
+                        <strong>(4) The Essence of BN:</strong><br>The essence of BN is to use optimization to adjust the variance size and mean position, making the new distribution fit the true distribution of the data better and ensuring the model's non-linear expressive power. An extreme case of BN is when these two parameters equal the mini-batch's mean and variance; in this case, the data after Batch Normalization is exactly the same as the input. Of course, in general, they are different.
+                    </li>
+                </ul>
+
+                <div class="special-box">
+                    <h4 data-en="Summary of BN Layer Functions" data-zh="总结 BN 层功能">Summary of BN Layer Functions</h4>
+                    <ul>
+                        <li data-en="<strong>Accelerate Convergence:</strong> Speeds up the training process." data-zh="<strong>加速收敛：</strong> 加快模型的训练速度。"><strong>Accelerate Convergence:</strong> Speeds up the training process.</li>
+                        <li data-en="<strong>Solve Gradient Issues:</strong> Mitigates gradient vanishing and gradient exploding problems." data-zh="<strong>解决梯度问题：</strong> 解决梯度消失和梯度爆炸问题。"><strong>Solve Gradient Issues:</strong> Mitigates gradient vanishing and gradient exploding problems.</li>
+                        <li data-en="<strong>Robust Initialization:</strong> Reduces sensitivity to weight initialization. For example, for an input unit, whether the weight is $w$ or scaled $kw$, the value after BN is the same because $k$ is cancelled out. This means the activation value remains consistent for learning, allowing for less careful weight initialization." data-zh="<strong>简化权重初始化：</strong> 可以不需要小心翼翼地设置权重初始化——初始化对学习的影响减小了。举例来说，对于一个单元的输入值，不管权重 $w$，还是放缩后的权重 $kw$，BN 过后的值都是一样的，这个 $k$ 被消掉了，对于学习来说，激活值是一样的。">
+                            <strong>Robust Initialization:</strong> Reduces sensitivity to weight initialization. For example, for an input unit, whether the weight is $w$ or scaled $kw$, the value after BN is the same because $k$ is cancelled out. This means the activation value remains consistent for learning, allowing for less careful weight initialization.
+                        </li>
+                    </ul>
+                </div>
+
+                <h3 data-en="ResNet Parameter Details" data-zh="ResNet 网络参数详解">ResNet Parameter Details</h3>
+                <div class="special-box character-box">
+                    <h4 data-en="Initial Layers" data-zh="初始层">Initial Layers</h4>
+                    <ul>
+                        <li data-en="<strong>Layer 1 (Input):</strong> Input image of size $224 \times 224 \times 3$." data-zh="<strong>第 1 层输入层：</strong> 输入为 $224 \times 224 \times 3$ 三通道的图像。">
+                            <strong>Layer 1 (Input):</strong> Input image of size $224 \times 224 \times 3$.
+                        </li>
+                        <li data-en="<strong>Layer 2 (Conv):</strong> Input $224 \times 224 \times 3$. Filters: 64. Size: $7 \times 7 \times 3$. Stride: 2. Padding: 3. <strong>Output:</strong> Feature map of shape $112 \times 112 \times 64$. The output is then processed by Batch Normalization." data-zh="<strong>第 2 层卷积层：</strong> 输入为 $224 \times 224 \times 3$，卷积核数量为 64 个；尺寸 $7 \times 7 \times 3$；步幅 2，填充 3。卷积后得到 shape 为 $112 \times 112 \times 64$ 的特征图输出。同时将输出的特征图经过批量规范化进行处理。">
+                            <strong>Layer 2 (Conv):</strong> Input $224 \times 224 \times 3$. Filters: 64. Size: $7 \times 7 \times 3$. Stride: 2. Padding: 3. <strong>Output:</strong> Feature map of shape $112 \times 112 \times 64$. The output is then processed by Batch Normalization.
+                        </li>
+                        <li data-en="<strong>Layer 3 (Max Pool):</strong> Input $112 \times 112 \times 64$. Pool size: $3 \times 3$. Stride: 2. Padding: 1. <strong>Output:</strong> Feature map of shape $56 \times 56 \times 64$." data-zh="<strong>第 3 层最大池化层：</strong> 输入为 $112 \times 112 \times 64$，池化核为 $3 \times 3$，步幅 2，填充 1。池化后得到尺寸为 $56 \times 56 \times 64$ 的特征图输出。">
+                            <strong>Layer 3 (Max Pool):</strong> Input $112 \times 112 \times 64$. Pool size: $3 \times 3$. Stride: 2. Padding: 1. <strong>Output:</strong> Feature map of shape $56 \times 56 \times 64$.
+                        </li>
+                    </ul>
+
+                    <h4 data-en="First Residual Part" data-zh="第一个残差部分">First Residual Part</h4>
+                    <ul>
+                        <li data-en="<strong>(1)</strong> Input: $56 \times 56 \times 64$. Filters: 64. Size: $3 \times 3 \times 64$. Stride: 1. Padding: 1. <strong>Output:</strong> $56 \times 56 \times 64$." data-zh="<strong>(1)</strong> 输入为 $56 \times 56 \times 64$，卷积核数量为 64 个；尺寸 $3 \times 3 \times 64$；步幅 1，填充 1；卷积后得到 shape 为 $56 \times 56 \times 64$ 的特征图输出。">
+                            <strong>(1)</strong> Input: $56 \times 56 \times 64$. Filters: 64. Size: $3 \times 3 \times 64$. Stride: 1. Padding: 1. <strong>Output:</strong> $56 \times 56 \times 64$.
+                        </li>
+                        <li data-en="<strong>(2)</strong> Input: $56 \times 56 \times 64$. Apply BN and ReLU. <strong>Output:</strong> $56 \times 56 \times 64$." data-zh="<strong>(2)</strong> 输入为 $56 \times 56 \times 64$，将输入的特征图经过批量规范化，然后经过 ReLU 激活函数进行激活。输出的特征图大小形状不变，为 $56 \times 56 \times 64$。">
+                            <strong>(2)</strong> Input: $56 \times 56 \times 64$. Apply BN and ReLU. <strong>Output:</strong> $56 \times 56 \times 64$.
+                        </li>
+                        <li data-en="<strong>(3)</strong> Input: $56 \times 56 \times 64$. Filters: 64. Size: $3 \times 3 \times 64$. Stride: 1. Padding: 1. <strong>Output:</strong> $56 \times 56 \times 64$." data-zh="<strong>(3)</strong> 输入为 $56 \times 56 \times 64$，卷积核数量为 64 个；尺寸 $3 \times 3 \times 64$；步幅 1，填充 1；卷积后得到 shape 为 $56 \times 56 \times 64$ 的特征图输出。">
+                            <strong>(3)</strong> Input: $56 \times 56 \times 64$. Filters: 64. Size: $3 \times 3 \times 64$. Stride: 1. Padding: 1. <strong>Output:</strong> $56 \times 56 \times 64$.
+                        </li>
+                        <li data-en="<strong>(4)</strong> Input: $56 \times 56 \times 64$. Apply BN. <strong>Output:</strong> $56 \times 56 \times 64$." data-zh="<strong>(4)</strong> 输入为 $56 \times 56 \times 64$，将输入的特征图经过批量规范化。输出的特征图大小形状不变，为 $56 \times 56 \times 64$。">
+                            <strong>(4)</strong> Input: $56 \times 56 \times 64$. Apply BN. <strong>Output:</strong> $56 \times 56 \times 64$.
+                        </li>
+                        <li data-en="<strong>(5)</strong> Add original input and output of step (4). Apply ReLU." data-zh="<strong>(5)</strong> 此时，残差块将最初的输入特征图和经过最后一道批量规范化输出的特征图进行进行相加，得到最后的输出特征图经过 ReLU 激活函数进行激活。">
+                            <strong>(5)</strong> Add original input and output of step (4). Apply ReLU.
+                        </li>
+                    </ul>
+
+                    <h4 data-en="Second Residual Part" data-zh="第二个残差部分">Second Residual Part</h4>
+                    <ul>
+                        <li data-en="<strong>(1)</strong> Input: $56 \times 56 \times 64$. Filters: 64. Size: $3 \times 3 \times 64$. Stride: 1. Padding: 1. <strong>Output:</strong> $56 \times 56 \times 64$." data-zh="<strong>(1)</strong> 输入为 $56 \times 56 \times 64$，卷积核数量为 64 个；尺寸 $3 \times 3 \times 64$；步幅 1，填充 1；卷积后得到 shape 为 $56 \times 56 \times 64$ 的特征图输出。">
+                            <strong>(1)</strong> Input: $56 \times 56 \times 64$. Filters: 64. Size: $3 \times 3 \times 64$. Stride: 1. Padding: 1. <strong>Output:</strong> $56 \times 56 \times 64$.
+                        </li>
+                        <li data-en="<strong>(2)</strong> Input: $56 \times 56 \times 64$. Apply BN and ReLU. <strong>Output:</strong> $56 \times 56 \times 64$." data-zh="<strong>(2)</strong> 输入为 $56 \times 56 \times 64$，将输入的特征图经过批量规范化，然后经过 ReLU 激活函数进行激活。输出的特征图大小形状不变，为 $56 \times 56 \times 64$。">
+                            <strong>(2)</strong> Input: $56 \times 56 \times 64$. Apply BN and ReLU. <strong>Output:</strong> $56 \times 56 \times 64$.
+                        </li>
+                        <li data-en="<strong>(3)</strong> Input: $56 \times 56 \times 64$. Filters: 64. Size: $3 \times 3 \times 64$. Stride: 1. Padding: 1. <strong>Output:</strong> $56 \times 56 \times 64$." data-zh="<strong>(3)</strong> 输入为 $56 \times 56 \times 64$，卷积核数量为 64 个；尺寸 $3 \times 3 \times 64$；步幅 1，填充 1；卷积后得到 shape 为 $56 \times 56 \times 64$ 的特征图输出。">
+                            <strong>(3)</strong> Input: $56 \times 56 \times 64$. Filters: 64. Size: $3 \times 3 \times 64$. Stride: 1. Padding: 1. <strong>Output:</strong> $56 \times 56 \times 64$.
+                        </li>
+                        <li data-en="<strong>(4)</strong> Input: $56 \times 56 \times 64$. Apply BN. <strong>Output:</strong> $56 \times 56 \times 64$." data-zh="<strong>(4)</strong> 输入为 $56 \times 56 \times 64$，将输入的特征图经过批量规范化。输出的特征图大小形状不变，为 $56 \times 56 \times 64$。">
+                            <strong>(4)</strong> Input: $56 \times 56 \times 64$. Apply BN. <strong>Output:</strong> $56 \times 56 \times 64$.
+                        </li>
+                        <li data-en="<strong>(5)</strong> Add original input and output of step (4). Apply ReLU. <strong>Final Output:</strong> $56 \times 56 \times 64$." data-zh="<strong>(5)</strong> 此时，残差块将最初的输入特征图和经过最后一道批量规范化输出的特征图进行进行相加，得到最后的输出特征图经过 ReLU 激活函数进行激活。输出的特征图大小为 $56 \times 56 \times 64$。">
+                            <strong>(5)</strong> Add original input and output of step (4). Apply ReLU. <strong>Final Output:</strong> $56 \times 56 \times 64$.
+                        </li>
+                    </ul>
+
+                    <h4 data-en="Third Residual Part (With 1x1 Conv)" data-zh="第 3 个残差部分（重点：引入 1x1 卷积调整通道数）">Third Residual Part (With 1x1 Conv)</h4>
+                    <ul>
+                        <li data-en="<strong>(1)</strong> Input: $56 \times 56 \times 64$. Filters: 128. Size: $3 \times 3 \times 64$. Stride: 2. Padding: 1. <strong>Output:</strong> $28 \times 28 \times 128$." data-zh="<strong>(1)</strong> 输入为 $56 \times 56 \times 64$，卷积核数量为 128 个；尺寸 $3 \times 3 \times 64$；步幅 2，填充 1；卷积后得到 shape 为 $28 \times 28 \times 128$ 的特征图输出。">
+                            <strong>(1)</strong> Input: $56 \times 56 \times 64$. Filters: 128. Size: $3 \times 3 \times 64$. Stride: 2. Padding: 1. <strong>Output:</strong> $28 \times 28 \times 128$.
+                        </li>
+                        <li data-en="<strong>(2)</strong> Input: $28 \times 28 \times 128$. Apply BN and ReLU. <strong>Output:</strong> $28 \times 28 \times 128$." data-zh="<strong>(2)</strong> 输入为 $28 \times 28 \times 128$，将输入的特征图经过批量规范化，然后经过 ReLU 激活函数进行激活。输出的特征图大小形状不变，为 $28 \times 28 \times 128$。">
+                            <strong>(2)</strong> Input: $28 \times 28 \times 128$. Apply BN and ReLU. <strong>Output:</strong> $28 \times 28 \times 128$.
+                        </li>
+                        <li data-en="<strong>(3)</strong> Input: $28 \times 28 \times 128$. Filters: 128. Size: $3 \times 3 \times 128$. Stride: 1. Padding: 1. <strong>Output:</strong> $28 \times 28 \times 128$." data-zh="<strong>(3)</strong> 输入为 $28 \times 28 \times 128$，卷积核数量为 128 个；尺寸 $3 \times 3 \times 128$；步幅 1，填充 1；卷积后得到 shape 为 $28 \times 28 \times 128$ 的特征图输出。">
+                            <strong>(3)</strong> Input: $28 \times 28 \times 128$. Filters: 128. Size: $3 \times 3 \times 128$. Stride: 1. Padding: 1. <strong>Output:</strong> $28 \times 28 \times 128$.
+                        </li>
+                        <li data-en="<strong>(4)</strong> Input: $28 \times 28 \times 128$. Apply BN. <strong>Output:</strong> $28 \times 28 \times 128$." data-zh="<strong>(4)</strong> 输入为 $28 \times 28 \times 128$，将输入的特征图经过批量规范化。输出的特征图大小形状不变，为 $28 \times 28 \times 128$。">
+                            <strong>(4)</strong> Input: $28 \times 28 \times 128$. Apply BN. <strong>Output:</strong> $28 \times 28 \times 128$.
+                        </li>
+                        <li data-en="<strong>(5) Shortcut Adjustment:</strong> Original input ($56 \times 56 \times 64$) and output ($28 \times 28 \times 128$) differ in size and channels. Use 128 filters of size $1 \times 1 \times 64$ with stride 2 and padding 0 to transform input to $28 \times 28 \times 128$. Then add and apply ReLU. <strong>Final Output:</strong> $28 \times 28 \times 128$." data-zh="<strong>(5) 捷径调整：</strong> 此时，残差块将最初的输入特征图和经过最后一道批量规范化输出的特征图的高宽和通道数不一样（一个为 64 一个为 128）；利用 128 个卷积核，尺寸 $1 \times 1 \times 64$；步幅 2，填充 0，得到输出为 $28 \times 28 \times 128$ 的特征图。此时就可以将两个特征图进行相加操作，得到一个 $28 \times 28 \times 128$ 的特征图；最后的输出特征图经过 ReLU 激活函数进行激活。输出的特征图大小为 $28 \times 28 \times 128$。">
+                            <strong>(5) Shortcut Adjustment:</strong> Original input ($56 \times 56 \times 64$) and output ($28 \times 28 \times 128$) differ in size and channels. Use 128 filters of size $1 \times 1 \times 64$ with stride 2 and padding 0 to transform input to $28 \times 28 \times 128$. Then add and apply ReLU. <strong>Final Output:</strong> $28 \times 28 \times 128$.
+                        </li>
+                    </ul>
+
+                    <h4 data-en="Fourth Residual Part" data-zh="第四个残差部分">Fourth Residual Part</h4>
+                    <ul>
+                        <li data-en="<strong>(1)</strong> Input: $28 \times 28 \times 128$. Filters: 128. Size: $3 \times 3 \times 128$. Stride: 1. Padding: 1. <strong>Output:</strong> $28 \times 28 \times 128$." data-zh="<strong>(1)</strong> 输入为 $28 \times 28 \times 128$，卷积核数量为 128 个；尺寸 $3 \times 3 \times 128$；步幅 1，填充 1；卷积后得到 shape 为 $28 \times 28 \times 128$ 的特征图输出。">
+                            <strong>(1)</strong> Input: $28 \times 28 \times 128$. Filters: 128. Size: $3 \times 3 \times 128$. Stride: 1. Padding: 1. <strong>Output:</strong> $28 \times 28 \times 128$.
+                        </li>
+                        <li data-en="<strong>(2)</strong> Input: $28 \times 28 \times 128$. Apply BN and ReLU. <strong>Output:</strong> $28 \times 28 \times 128$." data-zh="<strong>(2)</strong> 输入为 $28 \times 28 \times 128$，将输入的特征图经过批量规范化，然后经过 ReLU 激活函数进行激活。输出的特征图大小形状不变，为 $28 \times 28 \times 128$。">
+                            <strong>(2)</strong> Input: $28 \times 28 \times 128$. Apply BN and ReLU. <strong>Output:</strong> $28 \times 28 \times 128$.
+                        </li>
+                        <li data-en="<strong>(3)</strong> Input: $28 \times 28 \times 128$. Filters: 128. Size: $3 \times 3 \times 128$. Stride: 1. Padding: 1. <strong>Output:</strong> $28 \times 28 \times 128$." data-zh="<strong>(3)</strong> 输入为 $28 \times 28 \times 128$，卷积核数量为 128 个；尺寸 $3 \times 3 \times 128$；步幅 1，填充 1；卷积后得到 shape 为 $28 \times 28 \times 128$ 的特征图输出。">
+                            <strong>(3)</strong> Input: $28 \times 28 \times 128$. Filters: 128. Size: $3 \times 3 \times 128$. Stride: 1. Padding: 1. <strong>Output:</strong> $28 \times 28 \times 128$.
+                        </li>
+                        <li data-en="<strong>(4)</strong> Input: $28 \times 28 \times 128$. Apply BN. <strong>Output:</strong> $28 \times 28 \times 128$." data-zh="<strong>(4)</strong> 输入为 $28 \times 28 \times 128$，将输入的特征图经过批量规范化。输出的特征图大小形状不变，为 $28 \times 28 \times 128$。">
+                            <strong>(4)</strong> Input: $28 \times 28 \times 128$. Apply BN. <strong>Output:</strong> $28 \times 28 \times 128$.
+                        </li>
+                        <li data-en="<strong>(5)</strong> Add original input and output of step (4). Apply ReLU. <strong>Final Output:</strong> $28 \times 28 \times 128$." data-zh="<strong>(5)</strong> 此时，残差块将最初的输入特征图和经过最后一道批量规范化输出的特征图进行进行相加，得到最后的输出特征图经过 ReLU 激活函数进行激活。输出的特征图大小为 $28 \times 28 \times 128$。">
+                            <strong>(5)</strong> Add original input and output of step (4). Apply ReLU. <strong>Final Output:</strong> $28 \times 28 \times 128$.
+                        </li>
+                    </ul>
+                    <p data-en="<em>Note: The 3rd and 4th residual blocks are repeated 2 more times (blocks 5, 6, 7, 8). Blocks 5 and 7 have the same structure as block 3, while blocks 6 and 8 have the same structure as block 4. Omitted for brevity.</em>" data-zh="<em>注：第 3、4 个残差块再重复 2 次，也就是第 5、6、7、8 个残差块。5 和 7 的结构与 3 一样，6 和 8 的结构与 4 一样，此处省略。</em>">
+                        <em>Note: The 3rd and 4th residual blocks are repeated 2 more times (blocks 5, 6, 7, 8). Blocks 5 and 7 have the same structure as block 3, while blocks 6 and 8 have the same structure as block 4. Omitted for brevity.</em>
+                    </p>
+
+                    <h4 data-en="Final Layers (Global Avg Pooling & FC)" data-zh="最后部分：全局平均池化与全连接层">Final Layers (Global Avg Pooling & FC)</h4>
+                    <ul>
+                        <li data-en="<strong>Global Average Pooling:</strong> Input $7 \times 7 \times 512$. Output $1 \times 1 \times 512$." data-zh="<strong>全局平均池化模块：</strong> 输入为 $7 \times 7 \times 512$。池化后得到 shape 为 $1 \times 1 \times 512$ 的特征图输出。">
+                            <strong>Global Average Pooling:</strong> Input $7 \times 7 \times 512$. Output $1 \times 1 \times 512$.
+                        </li>
+                        <li data-en="<strong>Flatten Layer:</strong> Input $1 \times 1 \times 512$. Output $1 \times 512$." data-zh="<strong>Flatten 层：</strong> 输入为 $1 \times 1 \times 512$，输出为 $1 \times 512$。">
+                            <strong>Flatten Layer:</strong> Input $1 \times 1 \times 512$. Output $1 \times 512$.
+                        </li>
+                        <li data-en="<strong>Fully Connected Layer:</strong> Input $1 \times 512$. 10 Neurons. Softmax output for 10 classes." data-zh="<strong>线性全连接层：</strong> 输入为 $1 \times 512$。线性全连接层神经元个数分别为 10。最后一层全连接层用 softmax 输出 10 个分类。">
+                            <strong>Fully Connected Layer:</strong> Input $1 \times 512$. 10 Neurons. Softmax output for 10 classes.
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="conclusion">
+                    <h4 data-en="ResNet Summary" data-zh="ResNet 总结">ResNet Summary</h4>
+                    <p data-en="The emergence of ResNet marked a significant milestone in deep learning history:" data-zh="残差网络的出现是深度学习历史上的一个重要里程碑：">
+                        The emergence of ResNet marked a significant milestone in deep learning history:
+                    </p>
+                    <ul style="text-align: left; margin-top: 15px;">
+                        <li data-en="<strong>Depth Breakthrough:</strong><br>It allowed networks to break free from depth constraints, scaling from dozens to hundreds or thousands of layers." data-zh="<strong>突破深度束缚：</strong><br>使人们摆脱了深度的束缚，使网络层数从数十层跃升至几百上千层。">
+                            <strong>Depth Breakthrough:</strong><br>It allowed networks to break free from depth constraints, scaling from dozens to hundreds or thousands of layers.
+                        </li>
+                        <li data-en="<strong>Solving Degradation:</strong><br>It significantly improved the model degradation problem in deep neural networks." data-zh="<strong>解决退化问题：</strong><br>大幅改善了深度神经网络中的模型退化问题。">
+                            <strong>Solving Degradation:</strong><br>It significantly improved the model degradation problem in deep neural networks.
+                        </li>
+                        <li data-en="<strong>High Accuracy & Generalization:</strong><br>It greatly improved model accuracy and demonstrated strong generalization across various datasets and tasks." data-zh="<strong>高精度与通用性：</strong><br>大幅提高了模型精度，通用性强，适合各种类型的数据集和任务。">
+                            <strong>High Accuracy & Generalization:</strong><br>It greatly improved model accuracy and demonstrated strong generalization across various datasets and tasks.
+                        </li>
+                        <li data-en="<strong>Architectural Influence:</strong><br>The innovative design of residual blocks and shortcut connections profoundly influenced subsequent network architectures." data-zh="<strong>深远影响：</strong><br>残差块和 shortcut 这种优秀的设计也极大影响了后面的网络结构发展。">
+                            <strong>Architectural Influence:</strong><br>The innovative design of residual blocks and shortcut connections profoundly influenced subsequent network architectures.
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </article>
+
+        <!-- Go Top Button -->
+        <button class="go-top-btn">
+            <ion-icon name="arrow-up-outline"></ion-icon>
+            <span data-en="GO TOP" data-zh="回到顶部">GO TOP</span>
+        </button>
+
+        <!--
+          - ionicon link
+        -->
+        <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+        <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+        <!-- Custom Cursor Script -->
+        <script src="../js/cursor.js"></script>
+    </div>
+</body>
+</html>

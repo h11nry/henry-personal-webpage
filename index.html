@@ -7,14 +7,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Henry's Personal Page</title>
 
-  <!--
-    - favicon
-  -->
   <link rel="shortcut icon" href="./assets/images/300_21_黑猫警长.svg" type="image/x-icon">
-
-  <!--
-    - custom css link
-  -->
+  <link rel="preload" href="./assets/images/The Avator.png" as="image">
   <link rel="stylesheet" href="./assets/css/style.css">
   <link rel="stylesheet" href="./assets/css/cursor.css">
 
@@ -43,7 +37,7 @@
       <div class="sidebar-info">
 
         <figure class="avatar-box">
-          <img src="./assets/images/The Avator.png" alt="Henry" width="80">
+          <img src="./assets/images/The Avator.png" alt="Henry" width="80" height="80">
         </figure>
 
         <div class="info-content">
@@ -261,7 +255,7 @@
             <li class="service-item">
 
               <div class="service-icon-box">
-                <img src="./assets/images/icon-dev.svg" alt="Web development icon" width="40">
+                <img src="./assets/images/icon-dev.svg" alt="Web development icon" width="40" height="40" loading="lazy">
               </div>
 
               <div class="service-content-box">
@@ -277,7 +271,7 @@
             <li class="service-item">
 
               <div class="service-icon-box">
-                <img src="./assets/images/icon-design.svg" alt="mobile app icon" width="40">
+                <img src="./assets/images/icon-design.svg" alt="mobile app icon" width="40" height="40" loading="lazy">
               </div>
 
               <div class="service-content-box">
@@ -293,7 +287,7 @@
             <li class="service-item">
 
               <div class="service-icon-box">
-                <img src="./assets/images/icon-photo.svg" alt="camera icon" width="40">
+                <img src="./assets/images/icon-photo.svg" alt="camera icon" width="40" height="40" loading="lazy">
               </div>
 
               <div class="service-content-box">
@@ -309,7 +303,7 @@
             <li class="service-item">
 
               <div class="service-icon-box">
-                <img src="./assets/images/icon-film.svg" alt="film reviewing and analysis" width="40">
+                <img src="./assets/images/icon-film.svg" alt="film reviewing and analysis" width="40" height="40" loading="lazy">
 
               </div>
 
@@ -448,10 +442,10 @@
 
             <div class="modal-img-wrapper">
               <figure class="modal-avatar-box">
-                <img src="./assets/images/avatar-1.png" alt="Daniel lewis" width="80" data-modal-img>
+                <img src="./assets/images/avatar-1.png" alt="Daniel lewis" width="80" height="80" data-modal-img loading="lazy">
               </figure>
 
-              <img src="./assets/images/icon-quote.svg" alt="quote icon">
+              <img src="./assets/images/icon-quote.svg" alt="quote icon" loading="lazy">
             </div>
 
             <div class="modal-content">
@@ -971,9 +965,65 @@
           <h2 class="h2 article-title" data-en="Blog" data-zh="博客">Blog</h2>
         </header>
 
+        <!-- Blog Toolbar -->
+        <div class="blog-toolbar">
+          <div class="blog-control-group">
+            <label for="blog-sort-select" data-en="Sort by:" data-zh="排序方式：">Sort by:</label>
+            <select id="blog-sort-select" class="blog-filter-select">
+              <option value="newest" data-en="Newest First" data-zh="最新优先">Newest First</option>
+              <option value="oldest" data-en="Oldest First" data-zh="最旧优先">Oldest First</option>
+            </select>
+          </div>
+
+          <div class="blog-control-group">
+            <label for="blog-filter-mode" data-en="Filter by:" data-zh="筛选方式：">Filter by:</label>
+            <select id="blog-filter-mode" class="blog-filter-select">
+              <option value="all" data-en="Show All" data-zh="显示全部">Show All</option>
+              <option value="category" data-en="Category" data-zh="按分类">Category</option>
+            </select>
+          </div>
+
+          <div class="blog-control-group" id="blog-category-group" style="display: none;">
+            <select id="blog-category-select" class="blog-filter-select">
+              <!-- Options populated by JS -->
+            </select>
+            <button id="blog-apply-btn" class="blog-apply-btn" data-en="Apply" data-zh="应用">
+              Apply
+            </button>
+          </div>
+        </div>
+
         <section class="blog-posts">
 
           <ul class="blog-posts-list">
+
+            <li class="blog-post-item">
+              <a href="./assets/posts/ResNet-basic.html">
+
+                <figure class="blog-banner-box">
+                  <img src="./assets/images/ResNet-basic/ResNetBanner.png" alt="ResNet Principles" loading="lazy">
+                </figure>
+
+                <div class="blog-content">
+
+                  <div class="blog-meta">
+                    <p class="blog-category" data-en="Deep Learning" data-zh="深度学习">Deep Learning</p>
+
+                    <span class="dot"></span>
+
+                    <time datetime="2025-11-27">Nov 27, 2025</time>
+                  </div>
+
+                  <h3 class="h3 blog-item-title" data-en="Learning Record: ResNet Principles" data-zh="学习记录：ResNet原理">Learning Record: ResNet Principles</h3>
+
+                  <p class="blog-text" data-en="An introduction to the ResNet architecture and its core component, the Residual block. Explaining how skip connections solve the degradation problem." data-zh="介绍ResNet架构及其核心组件残差块。解释跳跃连接如何解决退化问题。">
+                    An introduction to the ResNet architecture and its core component, the Residual block. Explaining how skip connections solve the degradation problem.
+                  </p>
+
+                </div>
+
+              </a>
+            </li>
 
             <li class="blog-post-item">
               <a href="./assets/posts/GooLeNet-basic.html">
@@ -1157,27 +1207,11 @@
 
 
 
-  <!--
-    - custom js link
-  -->
-  <script src="./assets/js/script.js"></script>
-
-  <!--
-    - EmailJS
-  -->
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-
-  <!--
-    - ionicon link
-  -->
+  <script src="./assets/js/script.js" defer></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js" defer></script>
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-
-  <!--
-    - Live2D Widget - hijiki 智能加载器
-    - 自动检测环境：本地文件使用 CDN，服务器环境使用高分辨率本地资源
-  -->
-  <script src="assets/js/live2d-loader.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js" defer></script>
+  <script src="assets/js/live2d-loader.js" defer></script>
 
   <!--
     - Paper Plane Game Button
@@ -1360,10 +1394,7 @@
     });
   </script>
 
-  <!--
-    - Custom Cat Cursor Script
-  -->
-  <script src="./assets/js/cursor.js"></script>
+  <script src="./assets/js/cursor.js" defer></script>
 
 </body>
 
